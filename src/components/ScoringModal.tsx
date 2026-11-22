@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { Restaurant } from '../types';
 import { computeUserScore, compareWithOfficial, buildShareText } from '../lib/scoring';
+import type { UserScore } from '../lib/scoring';
 
 const CRITERIA = [
   { key: 'menjar', label: 'Menjar' },
@@ -12,27 +13,43 @@ const CRITERIA = [
 
 type CriterionKey = (typeof CRITERIA)[number]['key'];
 
+const DEFAULT_VALUES: Record<CriterionKey, number> = {
+  menjar: 5,
+  servei: 5,
+  espai: 5,
+  cuina: 5,
+  preu: 5,
+};
+
 interface ScoringModalProps {
   restaurant: Restaurant;
+  initialScores?: UserScore;
+  onSave?: (score: UserScore) => void;
   onClose: () => void;
 }
 
-export default function ScoringModal({ restaurant, onClose }: ScoringModalProps) {
-  const [values, setValues] = useState<Record<CriterionKey, number>>({
-    menjar: 5,
-    servei: 5,
-    espai: 5,
-    cuina: 5,
-    preu: 5,
-  });
-  const [platEstrella, setPlatEstrella] = useState(false);
+export default function ScoringModal({ restaurant, initialScores, onSave, onClose }: ScoringModalProps) {
+  const [values, setValues] = useState<Record<CriterionKey, number>>(() =>
+    initialScores
+      ? { menjar: initialScores.menjar, servei: initialScores.servei, espai: initialScores.espai, cuina: initialScores.cuina, preu: initialScores.preu }
+      : DEFAULT_VALUES,
+  );
+  const [platEstrella, setPlatEstrella] = useState(initialScores?.platEstrella ?? false);
   const [copied, setCopied] = useState(false);
 
   const score = computeUserScore({ ...values, platEstrella });
   const diff = compareWithOfficial(score, restaurant.rating);
   const shareText = buildShareText(restaurant.name, score, restaurant.rating);
 
-  const update = (key: CriterionKey, value: number) => setValues((v) => ({ ...v, [key]: value }));
+  const update = (key: CriterionKey, value: number) => {
+    setValues((v) => ({ ...v, [key]: value }));
+    onSave?.({ ...values, [key]: value, platEstrella });
+  };
+
+  const togglePlat = (checked: boolean) => {
+    setPlatEstrella(checked);
+    onSave?.({ ...values, platEstrella: checked });
+  };
 
   const copy = async (): Promise<void> => {
     try {
@@ -77,7 +94,7 @@ export default function ScoringModal({ restaurant, onClose }: ScoringModalProps)
         </div>
 
         <label className="mt-4 flex items-center gap-2 text-sm text-stone-700">
-          <input type="checkbox" checked={platEstrella} onChange={(e) => setPlatEstrella(e.target.checked)} className="accent-amber-500" />
+          <input type="checkbox" checked={platEstrella} onChange={(e) => togglePlat(e.target.checked)} className="accent-amber-500" />
           He menjat el plat estrella (+0,5)
         </label>
 

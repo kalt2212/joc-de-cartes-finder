@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { computeUserScore, compareWithOfficial, buildShareText, isValidCriterion } from './scoring';
+import {
+  computeUserScore,
+  compareWithOfficial,
+  buildShareText,
+  isValidCriterion,
+  parseStoredScores,
+  serializeScores,
+} from './scoring';
 
 const base = { menjar: 8, servei: 6, espai: 7, cuina: 9, preu: 5, platEstrella: false };
 
@@ -62,5 +69,28 @@ describe('buildShareText', () => {
   });
   it('handles a missing official rating', () => {
     expect(buildShareText('X', 5, null)).toContain('sense nota oficial');
+  });
+});
+
+describe('serializeScores / parseStoredScores', () => {
+  const saved = { 'r-1': { menjar: 8, servei: 6, espai: 7, cuina: 9, preu: 5, platEstrella: true } };
+
+  it('round-trips a map of scores', () => {
+    expect(parseStoredScores(serializeScores(saved))).toEqual(saved);
+  });
+  it('returns an empty map for missing or malformed payloads', () => {
+    expect(parseStoredScores(null)).toEqual({});
+    expect(parseStoredScores('not json')).toEqual({});
+    expect(parseStoredScores('[1,2]')).toEqual({});
+    expect(parseStoredScores('null')).toEqual({});
+  });
+  it('drops entries with invalid criteria or a missing flag', () => {
+    const raw = JSON.stringify({
+      good: { menjar: 1, servei: 1, espai: 1, cuina: 1, preu: 1, platEstrella: false },
+      outOfRange: { menjar: 11, servei: 1, espai: 1, cuina: 1, preu: 1, platEstrella: false },
+      noFlag: { menjar: 1, servei: 1, espai: 1, cuina: 1, preu: 1 },
+      text: 'nope',
+    });
+    expect(Object.keys(parseStoredScores(raw))).toEqual(['good']);
   });
 });

@@ -1,15 +1,27 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import data from '../public/data/restaurants.json';
 import type { Restaurant } from './types';
 import { sortByDistance, filterByComarca, mapsUrl } from './lib/geo';
 import { searchRestaurants } from './lib/search';
 import { findNearbyTargets, DEFAULT_RADIUS_KM } from './lib/radar';
+import { parseStoredScores, serializeScores } from './lib/scoring';
+import type { ScoresByRestaurant, UserScore } from './lib/scoring';
 import RadarBanner from './components/RadarBanner';
 import RoutePlannerPanel from './components/RoutePlannerPanel';
 import ScoringModal from './components/ScoringModal';
 
 const restaurants = data as Restaurant[];
 const comarques = Array.from(new Set(restaurants.map((r) => r.comarca))).sort();
+
+const SCORES_STORAGE_KEY = 'joc_de_cartes_scores';
+
+function readStoredScores(): ScoresByRestaurant {
+  try {
+    return parseStoredScores(window.localStorage.getItem(SCORES_STORAGE_KEY));
+  } catch {
+    return {};
+  }
+}
 
 type Geo = { status: 'idle' | 'loading' | 'ok' | 'denied' | 'unsupported'; lat?: number; lng?: number };
 
@@ -54,6 +66,33 @@ export default function App() {
   const [radiusKm, setRadiusKm] = useState(DEFAULT_RADIUS_KM);
   const [routeIds, setRouteIds] = useState<string[]>([]);
   const [scoring, setScoring] = useState<Restaurant | null>(null);
+  const [scores, setScores] = useState<ScoresByRestaurant>(readStoredScores);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(SCORES_STORAGE_KEY, serializeScores(scores));
+    } catch {
+      // Storage unavailable (private mode or quota): scores still last for this session.
+    }
+  }, [scores]);
+
+  const saveScore = (id: string, score: UserScore) => setScores((prev) => ({ ...prev, [id]: score }));
+
+  // Radar needs a position while enabled. Watch it continuously so results follow the user; clear on disable or unmount.
+  useEffect(() => {
+    if (!radarOn) return;
+    if (!('geolocation' in navigator)) {
+      setGeo({ status: 'unsupported' });
+      return;
+    }
+    setGeo((g) => (g.status === 'ok' ? g : { status: 'loading' }));
+    const watchId = navigator.geolocation.watchPosition(
+      (p) => setGeo({ status: 'ok', lat: p.coords.latitude, lng: p.coords.longitude }),
+      () => setGeo({ status: 'denied' }),
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 },
+    );
+    return () => navigator.geolocation.clearWatch(watchId);
+  }, [radarOn]);
 
   const locate = () => {
     if (!('geolocation' in navigator)) return setGeo({ status: 'unsupported' });
@@ -327,7 +366,14 @@ export default function App() {
         )}
       </main>
 
-      {scoring !== null && <ScoringModal restaurant={scoring} onClose={() => setScoring(null)} />}
+      {scoring !== null && (
+        <ScoringModal
+          restaurant={scoring}
+          initialScores={scores[scoring.id]}
+          onSave={(s) => saveScore(scoring.id, s)}
+          onClose={() => setScoring(null)}
+        />
+      )}
     </div>
   );
 }
