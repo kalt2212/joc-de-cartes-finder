@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Restaurant } from '../types';
 import { computeUserScore, compareWithOfficial, buildShareText } from '../lib/scoring';
 import type { UserScore } from '../lib/scoring';
@@ -37,6 +37,15 @@ export default function ScoringModal({ restaurant, initialScores, onSave, onClos
   const [platEstrella, setPlatEstrella] = useState(initialScores?.platEstrella ?? false);
   const [copied, setCopied] = useState(false);
 
+  // Tecla Escape tanca el diàleg (accessibilitat).
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [onClose]);
+
   const score = computeUserScore({ ...values, platEstrella });
   const diff = compareWithOfficial(score, restaurant.rating);
   const shareText = buildShareText(restaurant.name, score, restaurant.rating);
@@ -68,7 +77,12 @@ export default function ScoringModal({ restaurant, initialScores, onSave, onClos
             <h2 className="text-lg font-semibold">Tu Joc de Cartes</h2>
             <p className="text-sm text-stone-500">{restaurant.name}</p>
           </div>
-          <button type="button" onClick={onClose} className="rounded-full px-3 py-1 text-sm text-stone-600 hover:bg-stone-100">
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Tanca"
+            className="rounded-full px-3 py-1 text-sm text-stone-600 hover:bg-stone-100"
+          >
             Tanca
           </button>
         </div>
