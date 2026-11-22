@@ -15,6 +15,10 @@ export interface Restaurant {
   verified: boolean;
   /** true when Google Maps reports the business as permanently closed */
   permanentlyClosed?: boolean;
+  /** optional display badge, e.g. the host's own restaurant */
+  badge?: string;
+  /** optional free-text note about provenance or accuracy */
+  note?: string;
   sourceUrl?: string;
   googleMapsUrl: string;
 }
