@@ -19,6 +19,12 @@ export interface Restaurant {
   badge?: string;
   /** optional free-text note about provenance or accuracy */
   note?: string;
+  /** Marc Ribas's own score (0-10), only set when verified from a reputable source */
+  marcScore?: number | null;
+  /** URL of the article that verifies marcScore */
+  marcScoreSource?: string | null;
+  /** true only when marcScore was checked against a reputable source */
+  marcScoreVerified?: boolean;
   sourceUrl?: string;
   googleMapsUrl: string;
 }
