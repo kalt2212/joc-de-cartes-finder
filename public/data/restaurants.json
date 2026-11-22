@@ -1,0 +1,34 @@
+[
+  {
+    "id": "sample-1",
+    "name": "[EXEMPLE] Restaurant de prova 1",
+    "comarca": "Barcelonès",
+    "city": "Barcelona",
+    "lat": 41.3874,
+    "lng": 2.1686,
+    "season": 7,
+    "episodeTitle": "[EXEMPLE] Episodi de prova",
+    "winner": true,
+    "platEstrella": null,
+    "rating": null,
+    "verified": false,
+    "sample": true,
+    "googleMapsUrl": ""
+  },
+  {
+    "id": "sample-2",
+    "name": "[EXEMPLE] Restaurant de prova 2",
+    "comarca": "Baix Ebre",
+    "city": "Deltebre",
+    "lat": 40.7217,
+    "lng": 0.7246,
+    "season": 1,
+    "episodeTitle": "[EXEMPLE] Episodi de prova",
+    "winner": false,
+    "platEstrella": null,
+    "rating": null,
+    "verified": false,
+    "sample": true,
+    "googleMapsUrl": ""
+  }
+]
