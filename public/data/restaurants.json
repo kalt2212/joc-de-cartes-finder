@@ -16,7 +16,9 @@
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Hotel%20Antiga%20Calafell",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "t10xc4-duval",
@@ -35,7 +37,9 @@
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Duval%20Calafell",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "t10xc4-siroko",
@@ -54,7 +58,9 @@
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Siroko%20Port%20Segur%20de%20Calafell",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "t10xc3-tikus",
@@ -73,7 +79,9 @@
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=La%20cuina%20d%27en%20Tikus%20Castellgali",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "t10xc3-pepitu",
@@ -92,7 +100,9 @@
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Pepitu%20Manresa",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "t10xc2-marbrava",
@@ -111,7 +121,9 @@
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Marbrava%20Badalona",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "t10xc2-taverna-del-port",
@@ -130,7 +142,9 @@
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=La%20Taverna%20del%20Port%20Badalona",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "t10xc2-sucamar",
@@ -149,7 +163,9 @@
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Sucamar%20Badalona",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "lleida-2026-03-26-amoca",
@@ -169,7 +185,9 @@
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=L%27Amoca%20Lleida",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": 7,
+    "episodeScoreSource": "https://www.3cat.cat/3catinfo/tensio-fins-a-lultim-segon-marc-ribas-corona-el-guanyador-del-joc-de-cartes-mes-renyit-de-la-temporada/noticia/3401807/"
   },
   {
     "id": "lleida-2026-03-26-limo",
@@ -189,7 +207,9 @@
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Limo%20Restaurant%20Lleida",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": 6.8,
+    "episodeScoreSource": "https://www.3cat.cat/3catinfo/tensio-fins-a-lultim-segon-marc-ribas-corona-el-guanyador-del-joc-de-cartes-mes-renyit-de-la-temporada/noticia/3401807/"
   },
   {
     "id": "lleida-2026-03-26-eat-the-world",
@@ -209,7 +229,9 @@
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Eat%20the%20World%20Lleida",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": 6.9,
+    "episodeScoreSource": "https://www.3cat.cat/3catinfo/tensio-fins-a-lultim-segon-marc-ribas-corona-el-guanyador-del-joc-de-cartes-mes-renyit-de-la-temporada/noticia/3401807/"
   },
   {
     "id": "ciri-taverna-del-ciri",
@@ -230,7 +252,9 @@
     "note": "Restaurant del presentador, no consta com a concursant. Afegit per instrucció explícita.",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "t9xc19-gaig",
@@ -249,7 +273,9 @@
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Restaurant%20Gaig%20Barcelona",
     "marcScore": 10,
     "marcScoreSource": "https://elmon.cat/comunicacio/tv3-joc-cartes-programa-final-restaurant-barcelona-bona-nota-1142146/",
-    "marcScoreVerified": true
+    "marcScoreVerified": true,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "t9xc19-jiribilla",
@@ -268,7 +294,9 @@
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Jiribilla%20Barcelona",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "t9xc19-nobu",
@@ -288,7 +316,9 @@
     "note": "Coordenades de l'hotel Nobu Hotel Barcelona (Av. Roma 2); no verificades a nivell de restaurant.",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "t1-la-premsa",
@@ -307,7 +337,9 @@
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=La%20Premsa%20Cardona",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "t1-xaloc",
@@ -326,7 +358,9 @@
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Xaloc%20Calders",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "t1-mare-de-la-font",
@@ -345,7 +379,9 @@
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=La%20Mare%20de%20la%20Font%20Solsona",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "bergueda-2019-pedraforca",
@@ -364,7 +400,9 @@
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Hostal%20Pedraforca%20Berguedà",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "bergueda-2019-cal-batista",
@@ -383,7 +421,9 @@
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Cal%20Batista%20Bagà",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "bergueda-2019-hotel-jou",
@@ -402,7 +442,9 @@
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Hotel%20Jou%20Guardiola%20de%20Berguedà",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "bergueda-2019-les-fonts",
@@ -421,7 +463,9 @@
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Hostal%20Les%20Fonts%20Castellar%20de%20n'Hug",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "montserrat-2021-flor-de-sal",
@@ -440,7 +484,9 @@
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Flor%20de%20Sal%20Esparreguera",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "bages-2019-joviat",
@@ -459,7 +505,9 @@
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Joviat%20Manresa",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "b2-codina",
@@ -478,7 +526,9 @@
     "note": "Guanyador segons RàdioSeu (30/07/2026). Puntuació final 6,9.",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "b2-miseria",
@@ -497,7 +547,9 @@
     "note": "Competidor segons RàdioSeu (30/07/2026). Puntuació final 6,1.",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "b2-casino-peramola",
@@ -516,7 +568,9 @@
     "note": "Competidor segons RàdioSeu (30/07/2026). Puntuació final 5,6.",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "b2-hivernacle-olot",
@@ -535,7 +589,9 @@
     "note": "Competidor segons 3Cat (12/07/2017). Guanyador no confirmat en l'article. Coordenades aproximades (Olot).",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "b2-la-deu",
@@ -554,7 +610,9 @@
     "note": "Competidor segons 3Cat (12/07/2017). Guanyador no confirmat en l'article. Coordenades aproximades (Olot).",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "b2-les-pedretes",
@@ -572,7 +630,9 @@
     "note": "Esmentat com a restaurant de l'episodi segons el titular de 3CatInfo (22/10/2021), via cerca; article no obert. Coordenades aproximades (Olot).",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "b2-la-presa",
@@ -591,7 +651,9 @@
     "note": "Competidor segons 3Cat (05/11/2019). Guanyador: El Bistrot (Facebook Joc de Cartes). Coordenades aproximades (Flix).",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "b2-mas-de-subirats",
@@ -610,7 +672,9 @@
     "note": "Competidor segons 3Cat (05/11/2019). Guanyador: El Bistrot. Coordenades aproximades (Móra la Nova).",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "b2-la-beereria",
@@ -629,7 +693,9 @@
     "note": "Competidor segons 3Cat (05/11/2019). Guanyador: El Bistrot. Coordenades aproximades (Móra d'Ebre).",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "b2-el-bistrot-gandesa",
@@ -648,7 +714,9 @@
     "note": "Guanyador segons el post oficial de Joc de Cartes a Facebook (#JDCTerresEbreTV3). Coordenades aproximades (Gandesa).",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "b2-casa-coder",
@@ -667,7 +735,9 @@
     "note": "Competidor segons Reusdigital (28/09/2020). Guanyador no confirmat. Coordenades aproximades (Reus).",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "b2-sora",
@@ -686,7 +756,9 @@
     "note": "Competidor segons Reusdigital (28/09/2020). Guanyador no confirmat. Coordenades aproximades (Reus).",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "b2-a-3-mans",
@@ -705,7 +777,9 @@
     "note": "Competidor segons Reusdigital (28/09/2020). Guanyador no confirmat. Coordenades aproximades (Tarragona).",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "b2-cal-mano",
@@ -724,7 +798,9 @@
     "note": "Competidor segons Reusdigital (28/09/2020). Guanyador no confirmat. Coordenades aproximades (Tarragona).",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "b2-pura-brasa",
@@ -743,7 +819,9 @@
     "note": "Guanyador segons Diari de Girona (04/09/2025) i 3Cat. Coordenades aproximades (Platja d'Aro).",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "b2-tasketa-del-mar",
@@ -762,7 +840,9 @@
     "note": "Competidor segons Diari de Girona (04/09/2025). Coordenades aproximades (Platja d'Aro).",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "b2-italianini",
@@ -781,7 +861,9 @@
     "note": "Competidor segons Diari de Girona (04/09/2025). Coordenades aproximades (Platja d'Aro).",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "b2-ambient",
@@ -800,7 +882,9 @@
     "note": "Guanyador segons Nació Digital (via cerca). Adreça segons OpenTable.",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "b2-bar-martinez",
@@ -819,7 +903,9 @@
     "note": "Competidor segons 3Cat i La Vanguardia (28/08/2025). Coordenades aproximades (Mataró).",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   },
   {
     "id": "b2-cobalto",
@@ -838,6 +924,8 @@
     "note": "Competidor segons 3Cat i La Vanguardia (28/08/2025). Coordenades aproximades (El Masnou).",
     "marcScore": null,
     "marcScoreSource": null,
-    "marcScoreVerified": false
+    "marcScoreVerified": false,
+    "episodeFinalScore": null,
+    "episodeScoreSource": null
   }
 ]

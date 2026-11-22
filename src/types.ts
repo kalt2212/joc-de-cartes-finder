@@ -25,6 +25,10 @@ export interface Restaurant {
   marcScoreSource?: string | null;
   /** true only when marcScore was checked against a reputable source */
   marcScoreVerified?: boolean;
+  /** Final episode score (0-10) from the broadcast recap, null when unknown */
+  episodeFinalScore?: number | null;
+  /** URL of the article that verifies episodeFinalScore */
+  episodeScoreSource?: string | null;
   sourceUrl?: string;
   googleMapsUrl: string;
 }
