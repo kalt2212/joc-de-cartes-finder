@@ -1,8 +1,17 @@
 import { useEffect, useState } from 'react';
 import type { Restaurant } from '../types';
-import { computeUserScore, compareWithOfficial, buildShareText } from '../lib/scoring';
-import type { UserScore } from '../lib/scoring';
-import { BTN_GHOST, BTN_PRIMARY } from '../lib/buttonStyles';
+import {
+  computeUserScore,
+  compareWithOfficial,
+  buildShareText,
+  buildTweetText,
+  buildTweetIntentUrl,
+  loadHandle,
+  saveHandle,
+  normalizeHandle,
+} from '../lib/scoring';
+import type { UserScore, KeyValueStore } from '../lib/scoring';
+import { BTN_GHOST, BTN_PRIMARY, BTN_SECONDARY } from '../lib/buttonStyles';
 
 const CRITERIA = [
   { key: 'menjar', label: 'Menjar' },
@@ -22,6 +31,10 @@ const DEFAULT_VALUES: Record<CriterionKey, number> = {
   preu: 5,
 };
 
+function getLocalStore(): KeyValueStore | null {
+  return typeof window === 'undefined' ? null : window.localStorage;
+}
+
 interface ScoringModalProps {
   restaurant: Restaurant;
   initialScores?: UserScore;
@@ -37,6 +50,7 @@ export default function ScoringModal({ restaurant, initialScores, onSave, onClos
   );
   const [platEstrella, setPlatEstrella] = useState(initialScores?.platEstrella ?? false);
   const [copied, setCopied] = useState(false);
+  const [handleInput, setHandleInput] = useState<string>(() => loadHandle(getLocalStore()));
 
   // Escape closes the dialog for keyboard users.
   useEffect(() => {
@@ -51,6 +65,17 @@ export default function ScoringModal({ restaurant, initialScores, onSave, onClos
   const diff = compareWithOfficial(score, restaurant.rating);
   const shareText = buildShareText(restaurant.name, score, restaurant.rating);
 
+  const trimmedHandle = handleInput.trim();
+  const validHandle = trimmedHandle === '' ? null : normalizeHandle(trimmedHandle);
+  const handleInvalid = trimmedHandle !== '' && validHandle === null;
+  const tweetText = buildTweetText({
+    name: restaurant.name,
+    userScore: score,
+    platEstrella,
+    handle: validHandle,
+  });
+  const tweetUrl = buildTweetIntentUrl(tweetText);
+
   const update = (key: CriterionKey, value: number) => {
     setValues((v) => ({ ...v, [key]: value }));
     onSave?.({ ...values, [key]: value, platEstrella });
@@ -59,6 +84,11 @@ export default function ScoringModal({ restaurant, initialScores, onSave, onClos
   const togglePlat = (checked: boolean) => {
     setPlatEstrella(checked);
     onSave?.({ ...values, platEstrella: checked });
+  };
+
+  const changeHandle = (raw: string) => {
+    setHandleInput(raw);
+    saveHandle(getLocalStore(), raw);
   };
 
   const copy = async (): Promise<void> => {
@@ -70,17 +100,21 @@ export default function ScoringModal({ restaurant, initialScores, onSave, onClos
     }
   };
 
+  const shareToX = () => {
+    window.open(tweetUrl, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <div
       className="fixed inset-0 z-30 flex items-end justify-center bg-stone-900/40 p-4 backdrop-blur-sm sm:items-center"
       role="dialog"
       aria-modal="true"
-      aria-label="Tu Joc de Cartes"
+      aria-labelledby="scoring-modal-title"
     >
       <div className="w-full max-w-md rounded-2xl border border-stone-200 bg-white p-5 shadow-2xl">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h2 className="text-lg font-semibold">Tu Joc de Cartes</h2>
+            <h2 id="scoring-modal-title" className="text-lg font-semibold">Tu Joc de Cartes</h2>
             <p className="text-sm text-stone-500">{restaurant.name}</p>
           </div>
           <button type="button" onClick={onClose} className={`${BTN_GHOST} px-3 py-1`} aria-label="Tanca">
@@ -93,7 +127,7 @@ export default function ScoringModal({ restaurant, initialScores, onSave, onClos
             <label key={c.key} className="block text-sm">
               <span className="flex justify-between font-medium text-stone-700">
                 {c.label}
-                <span className="tabular-nums">{values[c.key]}/10</span>
+                <span className="tabular-nums" aria-hidden="true">{values[c.key]}/10</span>
               </span>
               <input
                 type="range"
@@ -101,6 +135,7 @@ export default function ScoringModal({ restaurant, initialScores, onSave, onClos
                 max={10}
                 step={0.5}
                 value={values[c.key]}
+                aria-valuetext={`${values[c.key]} de 10`}
                 onChange={(e) => update(c.key, Number(e.target.value))}
                 className="w-full cursor-pointer accent-amber-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2"
               />
@@ -127,14 +162,46 @@ export default function ScoringModal({ restaurant, initialScores, onSave, onClos
           </p>
         </div>
 
-        <div className="mt-4 flex items-center justify-end gap-2">
+        <div className="mt-4 space-y-1.5">
+          <label htmlFor="x-handle-input" className="block text-sm font-medium text-stone-700">
+            El teu handle de X (opcional)
+          </label>
+          <input
+            id="x-handle-input"
+            type="text"
+            inputMode="text"
+            autoComplete="username"
+            spellCheck={false}
+            placeholder="@el_teu_handle"
+            value={handleInput}
+            onChange={(e) => changeHandle(e.target.value)}
+            aria-invalid={handleInvalid}
+            aria-describedby="x-handle-help"
+            className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 aria-[invalid=true]:border-rose-400"
+          />
+          <p id="x-handle-help" className={`text-xs ${handleInvalid ? 'text-rose-700' : 'text-stone-500'}`}>
+            {handleInvalid
+              ? 'Format no vàlid: 1 a 15 lletres, números o guions baixos.'
+              : 'Es guarda al teu dispositiu per no haver-lo d\'escriure cada vegada.'}
+          </p>
+        </div>
+
+        <div className="mt-4 flex flex-wrap items-center justify-end gap-2">
           {copied && (
             <span role="status" className="text-xs font-medium text-emerald-700">
               Copiat
             </span>
           )}
-          <button type="button" onClick={copy} className={BTN_PRIMARY}>
+          <button type="button" onClick={copy} className={BTN_SECONDARY}>
             Copia el resultat
+          </button>
+          <button
+            type="button"
+            onClick={shareToX}
+            className={BTN_PRIMARY}
+            aria-label="Compartir veredicte a X, obre una nova finestra"
+          >
+            Compartir veredicte a X
           </button>
         </div>
       </div>
