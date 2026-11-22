@@ -2,6 +2,11 @@ import { useMemo, useState } from 'react';
 import data from '../public/data/restaurants.json';
 import type { Restaurant } from './types';
 import { sortByDistance, filterByComarca, mapsUrl } from './lib/geo';
+import { searchRestaurants } from './lib/search';
+import { findNearbyTargets, DEFAULT_RADIUS_KM } from './lib/radar';
+import RadarBanner from './components/RadarBanner';
+import RoutePlannerPanel from './components/RoutePlannerPanel';
+import ScoringModal from './components/ScoringModal';
 
 const restaurants = data as Restaurant[];
 const comarques = Array.from(new Set(restaurants.map((r) => r.comarca))).sort();
@@ -9,7 +14,7 @@ const comarques = Array.from(new Set(restaurants.map((r) => r.comarca))).sort();
 type Geo = { status: 'idle' | 'loading' | 'ok' | 'denied' | 'unsupported'; lat?: number; lng?: number };
 
 function Icon({ d, className = 'h-4 w-4' }: { d: string | readonly string[]; className?: string }) {
-  const paths: readonly string[] = typeof d === "string" ? [d] : d;
+  const paths: readonly string[] = typeof d === 'string' ? [d] : d;
   return (
     <svg
       viewBox="0 0 24 24"
@@ -43,7 +48,12 @@ const ICONS = {
 
 export default function App() {
   const [comarca, setComarca] = useState('');
+  const [query, setQuery] = useState('');
   const [geo, setGeo] = useState<Geo>({ status: 'idle' });
+  const [radarOn, setRadarOn] = useState(false);
+  const [radiusKm, setRadiusKm] = useState(DEFAULT_RADIUS_KM);
+  const [routeIds, setRouteIds] = useState<string[]>([]);
+  const [scoring, setScoring] = useState<Restaurant | null>(null);
 
   const locate = () => {
     if (!('geolocation' in navigator)) return setGeo({ status: 'unsupported' });
@@ -55,13 +65,30 @@ export default function App() {
     );
   };
 
+  const userPoint = geo.status === 'ok' && geo.lat !== undefined && geo.lng !== undefined ? { lat: geo.lat, lng: geo.lng } : null;
+
   const list = useMemo(() => {
-    const filtered = filterByComarca(restaurants, comarca);
-    if (geo.status === 'ok' && geo.lat !== undefined && geo.lng !== undefined) {
-      return sortByDistance(filtered, { lat: geo.lat, lng: geo.lng });
+    const byText = query.trim() === '' ? restaurants : searchRestaurants(restaurants, query).map((h) => h.restaurant);
+    const filtered = filterByComarca(byText, comarca);
+    if (userPoint !== null) {
+      return sortByDistance(filtered, userPoint);
     }
     return filtered;
-  }, [comarca, geo]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [comarca, query, geo]);
+
+  const radarHits = useMemo(
+    () => (radarOn && userPoint !== null ? findNearbyTargets(restaurants, userPoint, radiusKm) : []),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [radarOn, radiusKm, geo],
+  );
+
+  const routeStops = routeIds
+    .map((id) => restaurants.find((r) => r.id === id))
+    .filter((r): r is Restaurant => r !== undefined);
+
+  const toggleRoute = (id: string) =>
+    setRouteIds((ids) => (ids.includes(id) ? ids.filter((x) => x !== id) : [...ids, id]));
 
   const nearby = geo.status === 'ok';
 
@@ -94,6 +121,20 @@ export default function App() {
       <main className="mx-auto max-w-5xl px-4 pt-6 sm:px-6">
         <section className="mb-6 rounded-2xl border border-stone-200 bg-white p-3 shadow-sm sm:p-4">
           <label className="relative block">
+            <span className="sr-only">Cercar al veredicte</span>
+            <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-stone-400">
+              <Icon d={ICONS.search} />
+            </span>
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="El Veredicte de Marc Ribas: cerca per nom, poble, plat..."
+              className="w-full rounded-xl border border-stone-300 bg-stone-50 py-2.5 pl-10 pr-3 text-sm transition focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-200"
+            />
+          </label>
+
+          <label className="relative mt-3 block">
             <span className="sr-only">Filtrar per comarca</span>
             <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-stone-400">
               <Icon d={ICONS.pin} />
@@ -134,6 +175,21 @@ export default function App() {
           </div>
         </section>
 
+        <RadarBanner
+          enabled={radarOn}
+          hits={radarHits}
+          radiusKm={radiusKm}
+          onRadiusChange={setRadiusKm}
+          onToggle={() => setRadarOn((on) => !on)}
+        />
+
+        <RoutePlannerPanel
+          origin={userPoint}
+          stops={routeStops}
+          onRemove={(id) => setRouteIds((ids) => ids.filter((x) => x !== id))}
+          onClear={() => setRouteIds([])}
+        />
+
         {geo.status === 'denied' && (
           <p className="mb-4 flex items-center gap-2 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
             <Icon d={ICONS.alert} /> No s'ha pogut obtenir la teva ubicació. Pots filtrar per comarca.
@@ -150,106 +206,128 @@ export default function App() {
             <span className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-stone-100 text-stone-400">
               <Icon d={ICONS.search} className="h-6 w-6" />
             </span>
-            <p className="font-medium text-stone-800">No hi ha restaurants en aquesta comarca</p>
-            <p className="mt-1 text-sm text-stone-500">Prova amb una altra comarca o mostra tots els restaurants.</p>
+            <p className="font-medium text-stone-800">No hi ha restaurants per a aquesta cerca</p>
+            <p className="mt-1 text-sm text-stone-500">Prova amb una altra paraula o comarca.</p>
             <button
               type="button"
-              onClick={() => setComarca('')}
+              onClick={() => {
+                setComarca('');
+                setQuery('');
+              }}
               className="mt-4 rounded-full border border-stone-300 px-4 py-1.5 text-sm font-medium text-stone-700 transition hover:bg-stone-100"
             >
-              Mostra totes les comarques
+              Mostra tots els restaurants
             </button>
           </div>
         ) : (
           <ul className="grid gap-4 sm:grid-cols-2">
-            {list.map((r) => (
-              <li
-                key={r.id}
-                className={`group flex flex-col rounded-2xl border bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md ${
-                  r.winner ? 'border-amber-200' : 'border-stone-200'
-                }`}
-              >
-                <div className="flex flex-wrap gap-1.5">
-                  {r.winner && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800">
-                      <Icon d={ICONS.trophy} className="h-3 w-3" /> Guanyador
-                    </span>
-                  )}
-                  {r.badge && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-violet-100 px-2 py-0.5 text-xs font-semibold text-violet-800">
-                      <Icon d={ICONS.star} className="h-3 w-3" /> {r.badge}
-                    </span>
-                  )}
-                  {r.permanentlyClosed && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-800">
-                      <Icon d={ICONS.x} className="h-3 w-3" /> Tancat definitivament
-                    </span>
-                  )}
-                </div>
-
-                <h2 className="mt-2 text-lg font-semibold leading-snug text-stone-900">{r.name}</h2>
-                <p className="mt-0.5 flex items-center gap-1 text-sm text-stone-500">
-                  <Icon d={ICONS.pin} className="h-3.5 w-3.5 shrink-0" />
-                  <span>
-                    {r.city} · {r.comarca}
-                    {'distanceKm' in r && (
-                      <span className="font-medium text-emerald-700">
-                        {' '}
-                        · {(r as Restaurant & { distanceKm: number }).distanceKm.toFixed(1)} km
+            {list.map((r) => {
+              const inRoute = routeIds.includes(r.id);
+              return (
+                <li
+                  key={r.id}
+                  className={`group flex flex-col rounded-2xl border bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md ${
+                    r.winner ? 'border-amber-200' : 'border-stone-200'
+                  }`}
+                >
+                  <div className="flex flex-wrap gap-1.5">
+                    {r.winner && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800">
+                        <Icon d={ICONS.trophy} className="h-3 w-3" /> Guanyador
                       </span>
                     )}
-                  </span>
-                </p>
-
-                <div className="mt-3 rounded-xl bg-stone-50 px-3 py-2.5 text-sm">
-                  <p className="font-medium text-stone-800">
-                    {r.season !== null ? `T${r.season}: ` : ''}
-                    {r.episodeTitle}
-                  </p>
-                  {r.platEstrella && (
-                    <p className="mt-1.5 text-stone-700">
-                      <span className="inline-flex items-center gap-1 font-semibold text-amber-700">
-                        <Icon d={ICONS.star} className="h-3.5 w-3.5" /> Plat estrella
+                    {r.badge && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-violet-100 px-2 py-0.5 text-xs font-semibold text-violet-800">
+                        <Icon d={ICONS.star} className="h-3 w-3" /> {r.badge}
                       </span>
-                      <span className="block">{r.platEstrella}</span>
-                    </p>
-                  )}
-                </div>
+                    )}
+                    {r.permanentlyClosed && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-800">
+                        <Icon d={ICONS.x} className="h-3 w-3" /> Tancat definitivament
+                      </span>
+                    )}
+                  </div>
 
-                <div className="mt-auto flex items-center justify-between gap-3 pt-4">
-                  <span
-                    className={`text-sm font-semibold ${r.rating !== null ? 'text-stone-800' : 'text-stone-400'}`}
-                  >
-                    {r.rating !== null ? `★ ${r.rating}/10` : 'Nota pendent'}
-                  </span>
-                  <div className="flex items-center gap-1">
-                    {r.sourceUrl && (
-                      <a
-                        href={r.sourceUrl}
-                        target="_blank"
-                        rel="noreferrer"
+                  <h2 className="mt-2 text-lg font-semibold leading-snug text-stone-900">{r.name}</h2>
+                  <p className="mt-0.5 flex items-center gap-1 text-sm text-stone-500">
+                    <Icon d={ICONS.pin} className="h-3.5 w-3.5 shrink-0" />
+                    <span>
+                      {r.city} · {r.comarca}
+                      {'distanceKm' in r && (
+                        <span className="font-medium text-emerald-700">
+                          {' '}
+                          · {(r as Restaurant & { distanceKm: number }).distanceKm.toFixed(1)} km
+                        </span>
+                      )}
+                    </span>
+                  </p>
+
+                  <div className="mt-3 rounded-xl bg-stone-50 px-3 py-2.5 text-sm">
+                    <p className="font-medium text-stone-800">
+                      {r.season !== null ? `T${r.season}: ` : ''}
+                      {r.episodeTitle}
+                    </p>
+                    {r.platEstrella && (
+                      <p className="mt-1.5 text-stone-700">
+                        <span className="inline-flex items-center gap-1 font-semibold text-amber-700">
+                          <Icon d={ICONS.star} className="h-3.5 w-3.5" /> Plat estrella
+                        </span>
+                        <span className="block">{r.platEstrella}</span>
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-4">
+                    <span className={`text-sm font-semibold ${r.rating !== null ? 'text-stone-800' : 'text-stone-400'}`}>
+                      {r.rating !== null ? `★ ${r.rating}/10` : 'Nota pendent'}
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => setScoring(r)}
                         className="rounded-full px-3 py-1.5 text-sm text-stone-600 transition hover:bg-stone-100 hover:text-stone-900"
                       >
-                        Font
+                        La meva nota
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => toggleRoute(r.id)}
+                        className={`rounded-full px-3 py-1.5 text-sm font-medium transition ${
+                          inRoute ? 'bg-emerald-100 text-emerald-800' : 'text-stone-600 hover:bg-stone-100'
+                        }`}
+                      >
+                        {inRoute ? 'A la ruta' : 'Afegeix a la ruta'}
+                      </button>
+                      {r.sourceUrl && (
+                        <a
+                          href={r.sourceUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="rounded-full px-3 py-1.5 text-sm text-stone-600 transition hover:bg-stone-100 hover:text-stone-900"
+                        >
+                          Font
+                        </a>
+                      )}
+                      <a
+                        href={r.googleMapsUrl || mapsUrl(r.name, r.city)}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
+                      >
+                        <Icon d={ICONS.map} className="h-3.5 w-3.5" />
+                        Mapa
+                        <Icon d={ICONS.external} className="h-3 w-3" />
                       </a>
-                    )}
-                    <a
-                      href={r.googleMapsUrl || mapsUrl(r.name, r.city)}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
-                    >
-                      <Icon d={ICONS.map} className="h-3.5 w-3.5" />
-                      Mapa
-                      <Icon d={ICONS.external} className="h-3 w-3" />
-                    </a>
+                    </div>
                   </div>
-                </div>
-              </li>
-            ))}
+                </li>
+              );
+            })}
           </ul>
         )}
       </main>
+
+      {scoring !== null && <ScoringModal restaurant={scoring} onClose={() => setScoring(null)} />}
     </div>
   );
 }
