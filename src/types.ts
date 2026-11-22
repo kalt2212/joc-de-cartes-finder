@@ -5,13 +5,16 @@ export interface Restaurant {
   city: string;
   lat: number;
   lng: number;
-  season: number;
+  /** null when the season number was not verified */
+  season: number | null;
   episodeTitle: string;
   winner: boolean;
   platEstrella: string | null;
   rating: number | null;
-  /** true only when the record has been checked against a primary source */
+  /** true only when the record was checked against a primary source */
   verified: boolean;
-  sample?: boolean;
+  /** true when Google Maps reports the business as permanently closed */
+  permanentlyClosed?: boolean;
+  sourceUrl?: string;
   googleMapsUrl: string;
 }

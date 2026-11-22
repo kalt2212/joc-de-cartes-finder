@@ -38,10 +38,7 @@ export default function App() {
       </header>
 
       <section className="mb-6 flex flex-col gap-3 sm:flex-row">
-        <button
-          onClick={locate}
-          className="rounded-lg bg-stone-900 px-4 py-2 text-white hover:bg-stone-700"
-        >
+        <button onClick={locate} className="rounded-lg bg-stone-900 px-4 py-2 text-white hover:bg-stone-700">
           {geo.status === 'loading' ? 'Localitzant…' : 'Restaurants a prop meu'}
         </button>
         <select
@@ -72,14 +69,14 @@ export default function App() {
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-lg font-semibold">{r.name}</h2>
               {r.winner && <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">Guanyador</span>}
-              {r.sample && <span className="rounded-full bg-stone-200 px-2 py-0.5 text-xs text-stone-700">Exemple</span>}
+              {r.permanentlyClosed && <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs text-red-800">Tancat definitivament</span>}
             </div>
             <p className="text-sm text-stone-600">
               {r.city} · {r.comarca}
               {'distanceKm' in r && ` · ${(r as Restaurant & { distanceKm: number }).distanceKm.toFixed(1)} km`}
             </p>
             <p className="mt-1 text-sm">
-              T{r.season}: {r.episodeTitle}
+              {r.season !== null ? `T${r.season}: ` : ''}{r.episodeTitle}
             </p>
             {r.platEstrella && (
               <p className="mt-1 text-sm">
@@ -88,14 +85,12 @@ export default function App() {
             )}
             <div className="mt-3 flex items-center justify-between">
               <span className="text-sm text-stone-700">{r.rating !== null ? `Nota: ${r.rating}/10` : 'Nota: pendent'}</span>
-              <a
-                href={r.googleMapsUrl || mapsUrl(r.name, r.city)}
-                target="_blank"
-                rel="noreferrer"
-                className="text-sm font-medium text-blue-700 underline"
-              >
-                Obrir a Google Maps
-              </a>
+              <span>
+                <a href={r.googleMapsUrl || mapsUrl(r.name, r.city)} target="_blank" rel="noreferrer" className="text-sm font-medium text-blue-700 underline">Obrir a Google Maps</a>
+                {r.sourceUrl && (
+                  <a href={r.sourceUrl} target="_blank" rel="noreferrer" className="ml-3 text-sm text-stone-600 underline">Font</a>
+                )}
+              </span>
             </div>
           </li>
         ))}
