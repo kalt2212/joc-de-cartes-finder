@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { Restaurant } from '../types';
 import { computeUserScore, compareWithOfficial, buildShareText } from '../lib/scoring';
 import type { UserScore } from '../lib/scoring';
+import { BTN_GHOST, BTN_PRIMARY } from '../lib/buttonStyles';
 
 const CRITERIA = [
   { key: 'menjar', label: 'Menjar' },
@@ -37,13 +38,13 @@ export default function ScoringModal({ restaurant, initialScores, onSave, onClos
   const [platEstrella, setPlatEstrella] = useState(initialScores?.platEstrella ?? false);
   const [copied, setCopied] = useState(false);
 
-  // Tecla Escape tanca el diàleg (accessibilitat).
+  // Escape closes the dialog for keyboard users.
   useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
+    const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
   }, [onClose]);
 
   const score = computeUserScore({ ...values, platEstrella });
@@ -70,19 +71,19 @@ export default function ScoringModal({ restaurant, initialScores, onSave, onClos
   };
 
   return (
-    <div className="fixed inset-0 z-30 flex items-end justify-center bg-black/40 p-4 sm:items-center" role="dialog" aria-modal="true" aria-label="Tu Joc de Cartes">
-      <div className="w-full max-w-md rounded-2xl bg-white p-5 shadow-xl">
+    <div
+      className="fixed inset-0 z-30 flex items-end justify-center bg-stone-900/40 p-4 backdrop-blur-sm sm:items-center"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Tu Joc de Cartes"
+    >
+      <div className="w-full max-w-md rounded-2xl border border-stone-200 bg-white p-5 shadow-2xl">
         <div className="flex items-start justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold">Tu Joc de Cartes</h2>
             <p className="text-sm text-stone-500">{restaurant.name}</p>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Tanca"
-            className="rounded-full px-3 py-1 text-sm text-stone-600 hover:bg-stone-100"
-          >
+          <button type="button" onClick={onClose} className={`${BTN_GHOST} px-3 py-1`} aria-label="Tanca">
             Tanca
           </button>
         </div>
@@ -92,7 +93,7 @@ export default function ScoringModal({ restaurant, initialScores, onSave, onClos
             <label key={c.key} className="block text-sm">
               <span className="flex justify-between font-medium text-stone-700">
                 {c.label}
-                <span>{values[c.key]}/10</span>
+                <span className="tabular-nums">{values[c.key]}/10</span>
               </span>
               <input
                 type="range"
@@ -101,14 +102,19 @@ export default function ScoringModal({ restaurant, initialScores, onSave, onClos
                 step={0.5}
                 value={values[c.key]}
                 onChange={(e) => update(c.key, Number(e.target.value))}
-                className="w-full accent-amber-500"
+                className="w-full cursor-pointer accent-amber-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2"
               />
             </label>
           ))}
         </div>
 
-        <label className="mt-4 flex items-center gap-2 text-sm text-stone-700">
-          <input type="checkbox" checked={platEstrella} onChange={(e) => togglePlat(e.target.checked)} className="accent-amber-500" />
+        <label className="mt-4 flex cursor-pointer items-center gap-2 rounded-lg px-1 py-1 text-sm text-stone-700 transition hover:bg-stone-50">
+          <input
+            type="checkbox"
+            checked={platEstrella}
+            onChange={(e) => togglePlat(e.target.checked)}
+            className="h-4 w-4 cursor-pointer accent-amber-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2"
+          />
           He menjat el plat estrella (+0,5)
         </label>
 
@@ -122,12 +128,12 @@ export default function ScoringModal({ restaurant, initialScores, onSave, onClos
         </div>
 
         <div className="mt-4 flex items-center justify-end gap-2">
-          {copied && <span className="text-xs text-emerald-700">Copiat</span>}
-          <button
-            type="button"
-            onClick={copy}
-            className="rounded-full bg-stone-900 px-4 py-2 text-sm font-medium text-white hover:bg-stone-700"
-          >
+          {copied && (
+            <span role="status" className="text-xs font-medium text-emerald-700">
+              Copiat
+            </span>
+          )}
+          <button type="button" onClick={copy} className={BTN_PRIMARY}>
             Copia el resultat
           </button>
         </div>

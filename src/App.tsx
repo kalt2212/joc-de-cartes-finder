@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import data from '../public/data/restaurants.json';
 import type { Restaurant } from './types';
 import { sortByDistance, filterByComarca, mapsUrl } from './lib/geo';
@@ -6,9 +6,12 @@ import { searchRestaurants } from './lib/search';
 import { findNearbyTargets, DEFAULT_RADIUS_KM } from './lib/radar';
 import { parseStoredScores, serializeScores } from './lib/scoring';
 import type { ScoresByRestaurant, UserScore } from './lib/scoring';
+import { BTN_GHOST, BTN_ICON, BTN_MAP, BTN_PRIMARY, BTN_SECONDARY, BTN_ACTIVE, BTN_BASE } from './lib/buttonStyles';
 import RadarBanner from './components/RadarBanner';
-import RoutePlannerPanel from './components/RoutePlannerPanel';
-import ScoringModal from './components/ScoringModal';
+
+// Heavy panels are loaded on demand so the initial bundle only carries the list and radar views.
+const RoutePlannerPanel = lazy(() => import('./components/RoutePlannerPanel'));
+const ScoringModal = lazy(() => import('./components/ScoringModal'));
 
 const restaurants = data as Restaurant[];
 const comarques = Array.from(new Set(restaurants.map((r) => r.comarca))).sort();
@@ -136,7 +139,7 @@ export default function App() {
       <header className="sticky top-0 z-20 border-b border-stone-200/70 bg-white/75 backdrop-blur-md supports-[backdrop-filter]:bg-white/60">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <div className="flex min-w-0 items-center gap-2.5">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-stone-900 text-amber-300">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-stone-900 text-amber-300 shadow-sm">
               <Icon d={ICONS.utensils} className="h-5 w-5" />
             </span>
             <div className="min-w-0">
@@ -148,7 +151,8 @@ export default function App() {
             type="button"
             onClick={locate}
             disabled={geo.status === 'loading'}
-            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-stone-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-stone-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 disabled:opacity-60"
+            aria-label="Restaurants a prop meu"
+            className={`${BTN_PRIMARY} shrink-0`}
           >
             <Icon d={ICONS.locate} />
             <span className="hidden sm:inline">{geo.status === 'loading' ? 'Localitzant…' : 'Restaurants a prop meu'}</span>
@@ -181,7 +185,7 @@ export default function App() {
             <select
               value={comarca}
               onChange={(e) => setComarca(e.target.value)}
-              className="w-full appearance-none rounded-xl border border-stone-300 bg-stone-50 py-2.5 pl-10 pr-10 text-sm transition focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-200"
+              className="w-full cursor-pointer appearance-none rounded-xl border border-stone-300 bg-stone-50 py-2.5 pl-10 pr-10 text-sm transition hover:border-stone-400 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-200"
               aria-label="Comarca"
             >
               <option value="">Totes les comarques</option>
@@ -205,7 +209,8 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setComarca('')}
-                className="inline-flex items-center gap-1 rounded-full bg-stone-100 px-2 py-0.5 font-medium text-stone-700 transition hover:bg-stone-200"
+                aria-label={`Treu el filtre de comarca ${comarca}`}
+                className={`${BTN_BASE} gap-1 rounded-full bg-stone-100 px-2.5 py-0.5 text-xs font-medium text-stone-700 hover:bg-stone-200 hover:text-stone-900`}
               >
                 {comarca}
                 <Icon d={ICONS.x} className="h-3 w-3" />
@@ -222,12 +227,14 @@ export default function App() {
           onToggle={() => setRadarOn((on) => !on)}
         />
 
-        <RoutePlannerPanel
-          origin={userPoint}
-          stops={routeStops}
-          onRemove={(id) => setRouteIds((ids) => ids.filter((x) => x !== id))}
-          onClear={() => setRouteIds([])}
-        />
+        <Suspense fallback={null}>
+          <RoutePlannerPanel
+            origin={userPoint}
+            stops={routeStops}
+            onRemove={(id) => setRouteIds((ids) => ids.filter((x) => x !== id))}
+            onClear={() => setRouteIds([])}
+          />
+        </Suspense>
 
         {geo.status === 'denied' && (
           <p className="mb-4 flex items-center gap-2 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
@@ -253,7 +260,7 @@ export default function App() {
                 setComarca('');
                 setQuery('');
               }}
-              className="mt-4 rounded-full border border-stone-300 px-4 py-1.5 text-sm font-medium text-stone-700 transition hover:bg-stone-100"
+              className={`${BTN_SECONDARY} mt-4`}
             >
               Mostra tots els restaurants
             </button>
@@ -320,30 +327,20 @@ export default function App() {
                     <span className={`text-sm font-semibold ${r.rating !== null ? 'text-stone-800' : 'text-stone-400'}`}>
                       {r.rating !== null ? `★ ${r.rating}/10` : 'Nota pendent'}
                     </span>
-                    <div className="flex items-center gap-1">
-                      <button
-                        type="button"
-                        onClick={() => setScoring(r)}
-                        className="rounded-full px-3 py-1.5 text-sm text-stone-600 transition hover:bg-stone-100 hover:text-stone-900"
-                      >
+                    <div className="flex flex-wrap items-center gap-1">
+                      <button type="button" onClick={() => setScoring(r)} className={BTN_GHOST}>
                         La meva nota
                       </button>
                       <button
                         type="button"
                         onClick={() => toggleRoute(r.id)}
-                        className={`rounded-full px-3 py-1.5 text-sm font-medium transition ${
-                          inRoute ? 'bg-emerald-100 text-emerald-800' : 'text-stone-600 hover:bg-stone-100'
-                        }`}
+                        aria-pressed={inRoute}
+                        className={inRoute ? BTN_ACTIVE : BTN_GHOST}
                       >
                         {inRoute ? 'A la ruta' : 'Afegeix a la ruta'}
                       </button>
                       {r.sourceUrl && (
-                        <a
-                          href={r.sourceUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="rounded-full px-3 py-1.5 text-sm text-stone-600 transition hover:bg-stone-100 hover:text-stone-900"
-                        >
+                        <a href={r.sourceUrl} target="_blank" rel="noreferrer" className={BTN_GHOST}>
                           Font
                         </a>
                       )}
@@ -351,7 +348,7 @@ export default function App() {
                         href={r.googleMapsUrl || mapsUrl(r.name, r.city)}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
+                        className={BTN_MAP}
                       >
                         <Icon d={ICONS.map} className="h-3.5 w-3.5" />
                         Mapa
@@ -367,12 +364,14 @@ export default function App() {
       </main>
 
       {scoring !== null && (
-        <ScoringModal
-          restaurant={scoring}
-          initialScores={scores[scoring.id]}
-          onSave={(s) => saveScore(scoring.id, s)}
-          onClose={() => setScoring(null)}
-        />
+        <Suspense fallback={null}>
+          <ScoringModal
+            restaurant={scoring}
+            initialScores={scores[scoring.id]}
+            onSave={(s) => saveScore(scoring.id, s)}
+            onClose={() => setScoring(null)}
+          />
+        </Suspense>
       )}
     </div>
   );

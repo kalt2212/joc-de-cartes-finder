@@ -1,5 +1,6 @@
 import type { RadarHit } from '../lib/radar';
 import { MAX_RADIUS_KM } from '../lib/radar';
+import { BTN_ACTIVE, BTN_SECONDARY } from '../lib/buttonStyles';
 
 interface RadarBannerProps {
   enabled: boolean;
@@ -22,7 +23,8 @@ export default function RadarBanner({ enabled, hits, radiusKm, onRadiusChange, o
         <button
           type="button"
           onClick={onToggle}
-          className="shrink-0 rounded-full border border-stone-300 px-3 py-1.5 text-sm font-medium text-stone-700 hover:bg-stone-100"
+          aria-pressed={enabled}
+          className={enabled ? BTN_ACTIVE : BTN_SECONDARY}
         >
           {enabled ? 'Desactiva' : 'Activa'}
         </button>
@@ -35,7 +37,7 @@ export default function RadarBanner({ enabled, hits, radiusKm, onRadiusChange, o
             <select
               value={radiusKm}
               onChange={(e) => onRadiusChange(Number(e.target.value))}
-              className="rounded-lg border border-stone-300 bg-stone-50 px-2 py-1 text-sm"
+              className="cursor-pointer rounded-full border border-stone-300 bg-stone-50 px-3 py-1 text-sm transition hover:border-stone-400 focus:border-amber-500 focus:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-1"
             >
               {RADII.map((km) => (
                 <option key={km} value={km}>
