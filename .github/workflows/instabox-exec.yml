@@ -21,32 +21,48 @@ jobs:
           MACHINE_ID: "m_agraap7g6udlm4mesrp6f2nbgi"
           CMD: ${{ inputs.cmd }}
         run: |
-          echo "Dispatching command to Instabox machine $MACHINE_ID..."
+          set -u
           BODY=$(jq -n --arg cmd "$CMD" '{cmd: $cmd, timeoutSeconds: 120}')
-          HTTP_CODE=$(curl -sS -o response.json -w "%{http_code}" -X POST "https://api.instabox.sh/v1/machines/$MACHINE_ID/exec" \
-            -H "X-API-Key: $INSTABOX_API_KEY" \
-            -H "Content-Type: application/json" \
-            -d "$BODY" || echo 000)
+          HTTP_CODE=$(curl -sS -o response.json -w "%{http_code}" -X POST "https://api.instabox.sh/v1/machines/$MACHINE_ID/exec" -H "X-API-Key: $INSTABOX_API_KEY" -H "Content-Type: application/json" -d "$BODY" || true)
+          echo "HTTP_CODE=$HTTP_CODE" >> "$GITHUB_ENV"
+
+          # Decode a field: plain text passes through; a single base64 blob (no spaces) is decoded.
+          decode_field() {
+            local v
+            v=$(jq -r "$1" response.json 2>/dev/null || echo '')
+            if [ -n "$v" ] && ! printf '%s' "$v" | grep -q ' ' && printf '%s' "$v" | tr -d '\n' | grep -Eq '^[A-Za-z0-9+/=]{16,}$'; then
+              printf '%s' "$v" | tr -d '\n' | base64 -d 2>/dev/null || printf '%s' "$v"
+            else
+              printf '%s' "$v"
+            fi
+          }
+
+          STDOUT_TXT=$(decode_field '.stdout // ""')
+          STDERR_TXT=$(decode_field '.stderr // ""')
+          EXIT_CODE=$(jq -r '.exitCode // "n/a"' response.json 2>/dev/null || echo 'n/a')
+
           {
             echo "time: $(date -u +%FT%TZ)"
             echo "command: $CMD"
             echo "HTTP_STATUS: $HTTP_CODE"
-            echo "----- RESPONSE BODY -----"
-            cat response.json 2>/dev/null || true
-            echo
-            echo "----- END RESPONSE -----"
+            echo "exitCode: $EXIT_CODE"
+            echo "----- STDOUT -----"
+            printf '%s\n' "$STDOUT_TXT"
+            echo "----- STDERR -----"
+            printf '%s\n' "$STDERR_TXT"
+            echo "----- END -----"
           } > output.txt
+
           cat output.txt
           cat output.txt >> "$GITHUB_STEP_SUMMARY"
-          if [ "$HTTP_CODE" = "200" ]; then jq -r '"stdout:\n" + (.stdout // "") + "\nstderr:\n" + (.stderr // "") + "\nexitCode: " + (.exitCode|tostring)' response.json >> "$GITHUB_STEP_SUMMARY" || true; fi
-          echo "HTTP_CODE=$HTTP_CODE" >> "$GITHUB_ENV"
 
       - name: Publish output to instabox-output branch
         if: always()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          mkdir -p /tmp/out && cp output.txt /tmp/out/last-output.txt 2>/dev/null || echo 'no output' > /tmp/out/last-output.txt
+          mkdir -p /tmp/out
+          if [ -f output.txt ]; then cp output.txt /tmp/out/last-output.txt; else echo 'no output' > /tmp/out/last-output.txt; fi
           cd /tmp/out && git init -q && git checkout -q -b instabox-output
           git add last-output.txt
           git -c user.name="instabox-bridge" -c user.email="adrimg3196@gmail.com" commit -qm "instabox output $(date -u +%FT%TZ)"
@@ -55,4 +71,4 @@ jobs:
       - name: Fail on non-200
         if: always()
         run: |
-          if [ "$HTTP_CODE" != "200" ]; then echo "Instabox request failed with HTTP $HTTP_CODE"; exit 1; fi
+          if [ "${HTTP_CODE:-000}" != "200" ]; then echo "Instabox request failed with HTTP ${HTTP_CODE:-000}"; exit 1; fi
