@@ -18,13 +18,20 @@ jobs:
           MACHINE_ID: "m_agraap7g6udlm4mesrp6f2nbgi"
           CMD: ${{ inputs.cmd }}
         run: |
+          set -o pipefail
           echo "Dispatching command to Instabox machine $MACHINE_ID..."
-          # Call Instabox API to execute the command
-          # Instabox exec API endpoint: https://api.instabox.io/v1/machines/m_agraap7g6udlm4mesrp6f2nbgi/exec
-          # Or whatever endpoint Instabox uses. Let's make sure it handles curl with auth header:
-          # Authorization: Bearer $INSTABOX_API_KEY or X-API-Key: $INSTABOX_API_KEY
-          # We can test with curl -s -X POST "https://api.instabox.io/v1/machines/$MACHINE_ID/exec" ...
-          curl -s -w "\nHTTP_STATUS: %{http_code}\n" -X POST "https://api.instabox.io/v1/machines/$MACHINE_ID/exec" \
-            -H "Authorization: Bearer $INSTABOX_API_KEY" \
+          BODY=$(jq -n --arg cmd "$CMD" '{cmd: $cmd, timeoutSeconds: 120}')
+          HTTP_CODE=$(curl -sS -o response.json -w "%{http_code}" -X POST "https://api.instabox.sh/v1/machines/$MACHINE_ID/exec" \
+            -H "X-API-Key: $INSTABOX_API_KEY" \
             -H "Content-Type: application/json" \
-            -d "{\"command\": \"$CMD\"}" || true
+            -d "$BODY")
+          echo "HTTP_STATUS: $HTTP_CODE"
+          echo "----- RESPONSE BODY -----"
+          cat response.json
+          echo
+          echo "----- END RESPONSE -----"
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "Instabox request failed with HTTP $HTTP_CODE"
+            exit 1
+          fi
+          jq -r '"stdout:\n" + (.stdout // "") + "\nstderr:\n" + (.stderr // "") + "\nexitCode: " + (.exitCode|tostring)' response.json
