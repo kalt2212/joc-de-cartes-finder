@@ -1,0 +1,172 @@
+time: 2026-11-23T18:54:59Z
+command: cd /data/workspace/joc-de-cartes-finder && git checkout main && git pull origin main && npm test
+HTTP_STATUS: 200
+exitCode: 0
+----- STDOUT -----
+Your branch is behind 'origin/main' by 1 commit, and can be fast-forwarded.
+  (use "git pull" to update your local branch)
+Updating d5fe158..a2a4a4d
+Fast-forward
+ .github/workflows/instabox-exec.yml | 42 +++++++++++++++++++++++++------------
+ src/App.tsx                         | 41 +++++++++++++++++++++++++++++++++---
+ src/lib/favorites.test.ts           | 17 +++++++++++++++
+ src/lib/favorites.ts                |  5 +++++
+ 4 files changed, 89 insertions(+), 16 deletions(-)
+
+> joc-de-cartes-finder@0.1.0 test
+> vitest run
+
+
+ RUN  v1.6.1 /data/workspace/joc-de-cartes-finder
+
+ ✓ src/lib/share.test.ts  (13 tests) 4ms
+ ✓ src/lib/scoring.test.ts  (15 tests) 5ms
+ ✓ src/lib/routePlanner.test.ts  (11 tests) 8ms
+ ✓ src/lib/favorites.test.ts  (12 tests) 4ms
+ ✓ src/lib/search.test.ts  (11 tests) 5ms
+ ✓ src/lib/radar.test.ts  (5 tests) 2ms
+ ✓ src/lib/geo.test.ts  (5 tests) 3ms
+
+ Test Files  7 passed (7)
+      Tests  72 passed (72)
+   Start at  18:54:58
+   Duration  928ms (transform 238ms, setup 0ms, collect 318ms, tests 31ms, environment 1ms, prepare 614ms)
+----- STDERR -----
+Switched to branch 'main'
+From https://github.com/kalt2212/joc-de-cartes-finder
+ * branch            main       -> FETCH_HEAD
+   781a0dd..a2a4a4d  main       -> origin/main
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserType' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'server' of module exports inside circular dependency
+(node:68493) Warning: Accessing non-existent property 'BrowserLauncher' of module exports inside circular dependency
+----- END -----
