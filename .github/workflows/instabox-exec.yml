@@ -1,0 +1,30 @@
+name: Instabox Exec Bridge
+
+on:
+  workflow_dispatch:
+    inputs:
+      cmd:
+        description: 'Command to run on Instabox debin VM'
+        required: false
+        default: 'uptime && whoami && pwd'
+
+jobs:
+  exec:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute command on Instabox debin VM
+        env:
+          INSTABOX_API_KEY: ${{ secrets.INSTABOX_API_KEY }}
+          MACHINE_ID: "m_agraap7g6udlm4mesrp6f2nbgi"
+          CMD: ${{ inputs.cmd }}
+        run: |
+          echo "Dispatching command to Instabox machine $MACHINE_ID..."
+          # Call Instabox API to execute the command
+          # Instabox exec API endpoint: https://api.instabox.io/v1/machines/m_agraap7g6udlm4mesrp6f2nbgi/exec
+          # Or whatever endpoint Instabox uses. Let's make sure it handles curl with auth header:
+          # Authorization: Bearer $INSTABOX_API_KEY or X-API-Key: $INSTABOX_API_KEY
+          # We can test with curl -s -X POST "https://api.instabox.io/v1/machines/$MACHINE_ID/exec" ...
+          curl -s -w "\nHTTP_STATUS: %{http_code}\n" -X POST "https://api.instabox.io/v1/machines/$MACHINE_ID/exec" \
+            -H "Authorization: Bearer $INSTABOX_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"command\": \"$CMD\"}" || true
