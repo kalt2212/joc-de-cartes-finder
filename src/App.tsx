@@ -6,6 +6,7 @@ import { searchRestaurants } from './lib/search';
 import { findNearbyTargets, DEFAULT_RADIUS_KM } from './lib/radar';
 import { parseStoredScores, serializeScores } from './lib/scoring';
 import type { ScoresByRestaurant, UserScore } from './lib/scoring';
+import { loadFavorites, toggleFavorite, filterFavorites } from './lib/favorites';
 import { BTN_GHOST, BTN_ICON, BTN_MAP, BTN_PRIMARY, BTN_SECONDARY, BTN_ACTIVE, BTN_BASE } from './lib/buttonStyles';
 import RadarBanner from './components/RadarBanner';
 
@@ -23,6 +24,15 @@ function readStoredScores(): ScoresByRestaurant {
     return parseStoredScores(window.localStorage.getItem(SCORES_STORAGE_KEY));
   } catch {
     return {};
+  }
+}
+
+// Storage can be unavailable (private mode, denied access). Null makes the favorites helpers no-op safely.
+function getStorage(): Storage | null {
+  try {
+    return window.localStorage;
+  } catch {
+    return null;
   }
 }
 
@@ -70,6 +80,8 @@ export default function App() {
   const [routeIds, setRouteIds] = useState<string[]>([]);
   const [scoring, setScoring] = useState<Restaurant | null>(null);
   const [scores, setScores] = useState<ScoresByRestaurant>(readStoredScores);
+  const [favorites, setFavorites] = useState<string[]>(() => loadFavorites(getStorage()));
+  const [onlyFavorites, setOnlyFavorites] = useState(false);
 
   useEffect(() => {
     try {
@@ -80,6 +92,8 @@ export default function App() {
   }, [scores]);
 
   const saveScore = (id: string, score: UserScore) => setScores((prev) => ({ ...prev, [id]: score }));
+
+  const toggleFav = (id: string) => setFavorites(toggleFavorite(getStorage(), id));
 
   // Radar needs a position while enabled. Watch it continuously so results follow the user; clear on disable or unmount.
   useEffect(() => {
@@ -112,12 +126,13 @@ export default function App() {
   const list = useMemo(() => {
     const byText = query.trim() === '' ? restaurants : searchRestaurants(restaurants, query).map((h) => h.restaurant);
     const filtered = filterByComarca(byText, comarca);
+    const shown = onlyFavorites ? filterFavorites(filtered, favorites) : filtered;
     if (userPoint !== null) {
-      return sortByDistance(filtered, userPoint);
+      return sortByDistance(shown, userPoint);
     }
-    return filtered;
+    return shown;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [comarca, query, geo]);
+  }, [comarca, query, geo, onlyFavorites, favorites]);
 
   const radarHits = useMemo(
     () => (radarOn && userPoint !== null ? findNearbyTargets(restaurants, userPoint, radiusKm) : []),
@@ -205,6 +220,15 @@ export default function App() {
               {list.length} {list.length === 1 ? 'resultat' : 'resultats'}
             </span>
             {nearby && <span className="rounded-full bg-emerald-50 px-2 py-0.5 font-medium text-emerald-700">Ordenats per distància</span>}
+            <button
+              type="button"
+              onClick={() => setOnlyFavorites((on) => !on)}
+              aria-pressed={onlyFavorites}
+              className={onlyFavorites ? BTN_ACTIVE : BTN_GHOST}
+            >
+              <Icon d={ICONS.star} className="h-3.5 w-3.5" />
+              Només preferits
+            </button>
             {comarca && (
               <button
                 type="button"
@@ -259,6 +283,7 @@ export default function App() {
               onClick={() => {
                 setComarca('');
                 setQuery('');
+                setOnlyFavorites(false);
               }}
               className={`${BTN_SECONDARY} mt-4`}
             >
@@ -269,6 +294,7 @@ export default function App() {
           <ul className="grid gap-4 sm:grid-cols-2">
             {list.map((r) => {
               const inRoute = routeIds.includes(r.id);
+              const isFav = favorites.includes(r.id);
               return (
                 <li
                   key={r.id}
@@ -328,6 +354,15 @@ export default function App() {
                       {r.rating !== null ? `★ ${r.rating}/10` : 'Nota pendent'}
                     </span>
                     <div className="flex flex-wrap items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => toggleFav(r.id)}
+                        aria-pressed={isFav}
+                        className={isFav ? BTN_ACTIVE : BTN_GHOST}
+                      >
+                        <Icon d={ICONS.star} className="h-3.5 w-3.5" />
+                        {isFav ? 'Preferit' : 'Desa'}
+                      </button>
                       <button type="button" onClick={() => setScoring(r)} className={BTN_GHOST}>
                         La meva nota
                       </button>
