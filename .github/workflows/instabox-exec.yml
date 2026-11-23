@@ -8,6 +8,9 @@ on:
         required: false
         default: 'uptime && whoami && pwd'
 
+permissions:
+  contents: write
+
 jobs:
   exec:
     runs-on: ubuntu-latest
@@ -18,20 +21,38 @@ jobs:
           MACHINE_ID: "m_agraap7g6udlm4mesrp6f2nbgi"
           CMD: ${{ inputs.cmd }}
         run: |
-          set -o pipefail
           echo "Dispatching command to Instabox machine $MACHINE_ID..."
           BODY=$(jq -n --arg cmd "$CMD" '{cmd: $cmd, timeoutSeconds: 120}')
           HTTP_CODE=$(curl -sS -o response.json -w "%{http_code}" -X POST "https://api.instabox.sh/v1/machines/$MACHINE_ID/exec" \
             -H "X-API-Key: $INSTABOX_API_KEY" \
             -H "Content-Type: application/json" \
-            -d "$BODY")
-          echo "HTTP_STATUS: $HTTP_CODE"
-          echo "----- RESPONSE BODY -----"
-          cat response.json
-          echo
-          echo "----- END RESPONSE -----"
-          if [ "$HTTP_CODE" != "200" ]; then
-            echo "Instabox request failed with HTTP $HTTP_CODE"
-            exit 1
-          fi
-          jq -r '"stdout:\n" + (.stdout // "") + "\nstderr:\n" + (.stderr // "") + "\nexitCode: " + (.exitCode|tostring)' response.json
+            -d "$BODY" || echo 000)
+          {
+            echo "time: $(date -u +%FT%TZ)"
+            echo "command: $CMD"
+            echo "HTTP_STATUS: $HTTP_CODE"
+            echo "----- RESPONSE BODY -----"
+            cat response.json 2>/dev/null || true
+            echo
+            echo "----- END RESPONSE -----"
+          } > output.txt
+          cat output.txt
+          cat output.txt >> "$GITHUB_STEP_SUMMARY"
+          if [ "$HTTP_CODE" = "200" ]; then jq -r '"stdout:\n" + (.stdout // "") + "\nstderr:\n" + (.stderr // "") + "\nexitCode: " + (.exitCode|tostring)' response.json >> "$GITHUB_STEP_SUMMARY" || true; fi
+          echo "HTTP_CODE=$HTTP_CODE" >> "$GITHUB_ENV"
+
+      - name: Publish output to instabox-output branch
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p /tmp/out && cp output.txt /tmp/out/last-output.txt 2>/dev/null || echo 'no output' > /tmp/out/last-output.txt
+          cd /tmp/out && git init -q && git checkout -q -b instabox-output
+          git add last-output.txt
+          git -c user.name="instabox-bridge" -c user.email="adrimg3196@gmail.com" commit -qm "instabox output $(date -u +%FT%TZ)"
+          git push -q -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:refs/heads/instabox-output
+
+      - name: Fail on non-200
+        if: always()
+        run: |
+          if [ "$HTTP_CODE" != "200" ]; then echo "Instabox request failed with HTTP $HTTP_CODE"; exit 1; fi
