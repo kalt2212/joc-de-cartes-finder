@@ -95,8 +95,8 @@ describe('isFavorite', () => {
 describe('filterFavorites', () => {
   const items = [{ id: 'a' }, { id: 'b' }, { id: 'c' }];
 
-  it('returns every item when the list of favorites is empty', () => {
-    expect(filterFavorites(items, [])).toEqual(items);
+  it('returns no items when the list of favorites is empty', () => {
+    expect(filterFavorites(items, [])).toEqual([]);
   });
 
   it('keeps only items whose id is in the favorites list, in input order', () => {
