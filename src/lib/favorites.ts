@@ -35,3 +35,8 @@ export function toggleFavorite(store: KeyValueStore | null, id: string): string[
 export function isFavorite(favorites: readonly string[], id: string): boolean {
   return favorites.includes(id);
 }
+
+/** Keeps only the items whose id is saved as a favorite, preserving input order. */
+export function filterFavorites<T extends { id: string }>(items: readonly T[], favorites: readonly string[]): T[] {
+  return items.filter((item) => favorites.includes(item.id));
+}
