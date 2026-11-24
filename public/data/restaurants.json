@@ -1615,28 +1615,6 @@
     "episodeScoreSource": null
   },
   {
-    "id": "gran-tonino",
-    "name": "Gran Tonino",
-    "comarca": "Barcelonès",
-    "city": "Barcelona",
-    "lat": 41.3939608,
-    "lng": 2.143059,
-    "season": 9,
-    "episodeTitle": "T9xC1 - El restaurant més romàntic de Barcelona",
-    "winner": true,
-    "platEstrella": null,
-    "rating": null,
-    "verified": true,
-    "sourceUrl": "https://www.3cat.cat/3cat/joc-de-cartes/video/6352685/",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Gran%20Tonino%20Barcelona",
-    "note": "Coordenades de Google Maps (ROOFTOP) per Gran Tonino Piano Club, Carrer del Mestre Nicolau, 12. Revisar que sigui el mateix local.",
-    "marcScore": null,
-    "marcScoreSource": null,
-    "marcScoreVerified": false,
-    "episodeFinalScore": null,
-    "episodeScoreSource": null
-  },
-  {
     "id": "the-factory",
     "name": "The Factory",
     "comarca": "La Selva",
