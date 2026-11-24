@@ -103,7 +103,8 @@
     "marcScoreSource": null,
     "marcScoreVerified": false,
     "episodeFinalScore": null,
-    "episodeScoreSource": null
+    "episodeScoreSource": null,
+    "phone": "+34 722 65 85 57"
   },
   {
     "id": "t10xc2-marbrava",
@@ -125,7 +126,8 @@
     "marcScoreVerified": false,
     "episodeFinalScore": null,
     "episodeScoreSource": null,
-    "note": "Coordenades de Google Maps (ROOFTOP), Plaça Pati de Vela, 2, Badalona. Comparteix local amb Sucamar."
+    "note": "Coordenades de Google Maps (ROOFTOP), Plaça Pati de Vela, 2, Badalona. Comparteix local amb Sucamar.",
+    "phone": "+34 601 16 44 49"
   },
   {
     "id": "t10xc2-taverna-del-port",
