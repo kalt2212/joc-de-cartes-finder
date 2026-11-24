@@ -1,13 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { filterByWinner, filterByBadge } from './filters';
+import { filterBySeason, sortByScore } from './filters';
 import type { Restaurant } from '../types';
 
 const base = {
-  comarca: 'Bages',
-  city: 'Manresa',
-  lat: 0,
-  lng: 0,
-  season: 1,
+  comarca: 'Barcelonès',
+  city: 'Barcelona',
+  lat: 41.39,
+  lng: 2.17,
   episodeTitle: 'x',
   winner: false,
   platEstrella: null,
@@ -17,25 +16,31 @@ const base = {
 };
 
 const items: Restaurant[] = [
-  { ...base, id: 'a', name: 'A', winner: true },
-  { ...base, id: 'b', name: 'B', winner: false },
-  { ...base, id: 'c', name: 'C', winner: true, badge: "Restaurant d'en Marc Ribas" },
+  { ...base, id: 'a', name: 'A', season: 8, episodeFinalScore: 6.5 },
+  { ...base, id: 'b', name: 'B', season: 9, episodeFinalScore: 8.2 },
+  { ...base, id: 'c', name: 'C', season: null, episodeFinalScore: null },
+  { ...base, id: 'd', name: 'D', season: 8, episodeFinalScore: 7.9 },
 ];
 
-describe('filterByWinner', () => {
-  it('returns all items when the filter is off', () => {
-    expect(filterByWinner(items, false).map((r) => r.id)).toEqual(['a', 'b', 'c']);
+describe('filterBySeason', () => {
+  it('returns all items when season is null', () => {
+    expect(filterBySeason(items, null).map((r) => r.id)).toEqual(['a', 'b', 'c', 'd']);
   });
-  it('keeps only winners when on', () => {
-    expect(filterByWinner(items, true).map((r) => r.id)).toEqual(['a', 'c']);
+  it('keeps only the given season', () => {
+    expect(filterBySeason(items, 8).map((r) => r.id)).toEqual(['a', 'd']);
+  });
+  it('excludes unknown season when a season is chosen', () => {
+    expect(filterBySeason(items, 9).map((r) => r.id)).toEqual(['b']);
   });
 });
 
-describe('filterByBadge', () => {
-  it('returns all items when the filter is off', () => {
-    expect(filterByBadge(items, false).map((r) => r.id)).toEqual(['a', 'b', 'c']);
+describe('sortByScore', () => {
+  it('sorts by episodeFinalScore descending, unknown scores last', () => {
+    expect(sortByScore(items).map((r) => r.id)).toEqual(['b', 'd', 'a', 'c']);
   });
-  it('keeps only items with a badge when on', () => {
-    expect(filterByBadge(items, true).map((r) => r.id)).toEqual(['c']);
+  it('does not mutate the input', () => {
+    const before = items.map((r) => r.id);
+    sortByScore(items);
+    expect(items.map((r) => r.id)).toEqual(before);
   });
 });

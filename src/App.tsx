@@ -7,7 +7,7 @@ import { findNearbyTargets, DEFAULT_RADIUS_KM } from './lib/radar';
 import { parseStoredScores, serializeScores } from './lib/scoring';
 import type { ScoresByRestaurant, UserScore } from './lib/scoring';
 import { loadFavorites, toggleFavorite, filterFavorites } from './lib/favorites';
-import { filterByWinner, filterByBadge } from './lib/filters';
+import { filterByWinner, filterByBadge, filterBySeason, sortByScore } from './lib/filters';
 import { BTN_GHOST, BTN_ICON, BTN_MAP, BTN_PRIMARY, BTN_SECONDARY, BTN_ACTIVE, BTN_BASE } from './lib/buttonStyles';
 import RadarBanner from './components/RadarBanner';
 
@@ -17,6 +17,7 @@ const ScoringModal = lazy(() => import('./components/ScoringModal'));
 
 const restaurants = data as Restaurant[];
 const comarques = Array.from(new Set(restaurants.map((r) => r.comarca))).sort();
+const seasons = Array.from(new Set(restaurants.map((r) => r.season).filter((x): x is number => x !== null))).sort((a, b) => a - b);
 
 const SCORES_STORAGE_KEY = 'joc_de_cartes_scores';
 
@@ -85,6 +86,8 @@ export default function App() {
   const [onlyFavorites, setOnlyFavorites] = useState(false);
   const [onlyWinners, setOnlyWinners] = useState(false);
   const [onlyBadged, setOnlyBadged] = useState(false);
+  const [season, setSeason] = useState<number | null>(null);
+  const [sortByScoreOn, setSortByScoreOn] = useState(false);
 
   useEffect(() => {
     try {
@@ -128,14 +131,14 @@ export default function App() {
 
   const list = useMemo(() => {
     const byText = query.trim() === '' ? restaurants : searchRestaurants(restaurants, query).map((h) => h.restaurant);
-    const filtered = filterByComarca(byText, comarca);
+    const filtered = filterBySeason(filterByComarca(byText, comarca), season);
     const shown = filterByBadge(filterByWinner(onlyFavorites ? filterFavorites(filtered, favorites) : filtered, onlyWinners), onlyBadged);
     if (userPoint !== null) {
       return sortByDistance(shown, userPoint);
     }
-    return shown;
+    return sortByScoreOn ? sortByScore(shown) : shown;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [comarca, query, geo, onlyFavorites, favorites, onlyWinners, onlyBadged]);
+  }, [comarca, query, geo, onlyFavorites, favorites, onlyWinners, onlyBadged, season, sortByScoreOn]);
 
   const radarHits = useMemo(
     () => (radarOn && userPoint !== null ? findNearbyTargets(restaurants, userPoint, radiusKm) : []),
@@ -218,6 +221,23 @@ export default function App() {
             </span>
           </label>
 
+          <label className="relative mt-3 block">
+            <span className="sr-only">Filtrar per temporada</span>
+            <select
+              value={season === null ? '' : String(season)}
+              onChange={(e) => setSeason(e.target.value === '' ? null : Number(e.target.value))}
+              className="w-full cursor-pointer appearance-none rounded-xl border border-stone-300 bg-stone-50 py-2.5 pl-3 pr-10 text-sm transition hover:border-stone-400 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-200"
+              aria-label="Temporada"
+            >
+              <option value="">Totes les temporades</option>
+              {seasons.map((n) => (
+                <option key={n} value={n}>
+                  Temporada {n}
+                </option>
+              ))}
+            </select>
+          </label>
+
           <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-stone-500">
             <span>
               {list.length} {list.length === 1 ? 'resultat' : 'resultats'}
@@ -249,6 +269,15 @@ export default function App() {
             >
               <Icon d={ICONS.star} className="h-3.5 w-3.5" />
               Restaurant de Marc Ribas
+            </button>
+            <button
+              type="button"
+              onClick={() => setSortByScoreOn((on) => !on)}
+              aria-pressed={sortByScoreOn}
+              className={sortByScoreOn ? BTN_ACTIVE : BTN_GHOST}
+            >
+              <Icon d={ICONS.star} className="h-3.5 w-3.5" />
+              Per puntuació
             </button>
             {comarca && (
               <button
@@ -307,6 +336,8 @@ export default function App() {
                 setOnlyFavorites(false);
                 setOnlyWinners(false);
                 setOnlyBadged(false);
+                setSeason(null);
+                setSortByScoreOn(false);
               }}
               className={`${BTN_SECONDARY} mt-4`}
             >
