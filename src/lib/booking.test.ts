@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { bookingUrl, bookingLabel, callUrl, contactAction } from './booking';
+import { bookingUrl, bookingLabel, callUrl, contactAction, withAffiliate } from './booking';
 import type { Restaurant } from '../types';
 
 const base: Restaurant = {
@@ -64,5 +64,40 @@ describe('contactAction', () => {
   });
   it('hides the action for permanently closed venues', () => {
     expect(contactAction({ ...base, permanentlyClosed: true })).toBeNull();
+  });
+});
+
+describe('affiliate booking', () => {
+  const base = { id: 'x', name: 'Casa Rafols', comarca: 'Barcelonès', city: 'Barcelona', lat: 41.4, lng: 2.1, season: null,
+    episodeTitle: '', winner: false, platEstrella: null, rating: null, verified: true } as Restaurant;
+
+  it('uses the plain TheFork search when no affiliate id is configured', () => {
+    expect(bookingUrl(base, undefined)).toBe('https://www.thefork.cat/search?q=Casa%20Rafols');
+  });
+
+  it('appends the affiliate parameter when an affiliate id is configured', () => {
+    const u = new URL(bookingUrl(base, 'ABC123'));
+    expect(u.origin + u.pathname).toBe('https://www.thefork.cat/search');
+    expect(u.searchParams.get('q')).toBe('Casa Rafols');
+    expect(u.searchParams.get('affiliate')).toBe('ABC123');
+  });
+
+  it('prefers a confirmed direct booking link over the search, with affiliate', () => {
+    const r = { ...base, bookingUrl: 'https://www.thefork.cat/restaurant/casa-rafols-r123' } as Restaurant;
+    expect(bookingUrl(r, 'ABC123')).toBe('https://www.thefork.cat/restaurant/casa-rafols-r123?affiliate=ABC123');
+  });
+
+  it('keeps a direct link free of duplicate affiliate params', () => {
+    const r = { ...base, bookingUrl: 'https://www.thefork.cat/restaurant/x?affiliate=OLD' } as Restaurant;
+    expect(bookingUrl(r, 'NEW')).toBe('https://www.thefork.cat/restaurant/x?affiliate=NEW');
+  });
+
+  it('labels a confirmed direct link as a direct booking', () => {
+    const r = { ...base, bookingUrl: 'https://www.thefork.cat/restaurant/x-r1' } as Restaurant;
+    expect(bookingLabel(r)).toBe('Reservar directament');
+  });
+
+  it('keeps the generic label for the search fallback', () => {
+    expect(bookingLabel(base)).toBe('Reservar taula');
   });
 });

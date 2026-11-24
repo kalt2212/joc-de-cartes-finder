@@ -35,4 +35,6 @@ export interface Restaurant {
   website?: string;
   sourceUrl?: string;
   googleMapsUrl: string;
+  /** Confirmed direct TheFork booking page for this venue. Absent until verified. */
+  bookingUrl?: string;
 }

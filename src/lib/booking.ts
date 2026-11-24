@@ -1,15 +1,31 @@
 import type { Restaurant } from '../types';
 import { mapsUrl } from './geo';
 
-/** Booking entry point: TheFork search for the name, or the Google Maps link for closed venues. */
-export function bookingUrl(r: Restaurant): string {
+/** TheFork affiliate id. Set VITE_AFFILIATE_ID at build time; empty means no tracking param. */
+export const AFFILIATE_ID: string | undefined = (import.meta.env.VITE_AFFILIATE_ID as string | undefined) || undefined;
+
+/** Adds or replaces the affiliate parameter. Returns the URL unchanged when no id is configured. */
+export function withAffiliate(url: string, affiliateId: string | undefined): string {
+  if (!affiliateId) return url;
+  const u = new URL(url);
+  u.searchParams.set('affiliate', affiliateId);
+  return u.toString();
+}
+
+/**
+ * Booking entry point. Closed venues go to the map. A confirmed direct TheFork link is used when
+ * present; otherwise a TheFork search by name. The affiliate id, when set, is appended to either.
+ */
+export function bookingUrl(r: Restaurant, affiliateId: string | undefined = AFFILIATE_ID): string {
   if (r.permanentlyClosed) return r.googleMapsUrl;
-  return `https://www.thefork.cat/search?q=${encodeURIComponent(r.name)}`;
+  if (r.bookingUrl) return withAffiliate(r.bookingUrl, affiliateId);
+  return withAffiliate(`https://www.thefork.cat/search?q=${encodeURIComponent(r.name)}`, affiliateId);
 }
 
 /** Button label that matches what the link does. */
 export function bookingLabel(r: Restaurant): string {
-  return r.permanentlyClosed ? 'Veure al mapa' : 'Reservar taula';
+  if (r.permanentlyClosed) return 'Veure al mapa';
+  return r.bookingUrl ? 'Reservar directament' : 'Reservar taula';
 }
 
 /** Phone link (tel:) for the call button. Null when no phone is known or the venue is closed. */
