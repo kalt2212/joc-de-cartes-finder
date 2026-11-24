@@ -1,5 +1,5 @@
 import json, unittest, os
-DS = os.environ.get("DS_PATH", "public/data/restaurants.json")
+DS = os.environ.get("DS_PATH") or os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "public", "data", "restaurants.json")
 class TestDatasetInvariants(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
