@@ -264,8 +264,8 @@
     "name": "Restaurant Gaig",
     "comarca": "Barcelonès",
     "city": "Barcelona",
-    "lat": 41.3882509,
-    "lng": 2.1599648,
+    "lat": 41.3916196,
+    "lng": 2.131445,
     "season": 9,
     "episodeTitle": "T9xC19 - El restaurant de Barcelona que no et pots perdre",
     "winner": true,
@@ -278,7 +278,10 @@
     "marcScoreSource": "https://elmon.cat/comunicacio/tv3-joc-cartes-programa-final-restaurant-barcelona-bona-nota-1142146/",
     "marcScoreVerified": true,
     "episodeFinalScore": null,
-    "episodeScoreSource": null
+    "episodeScoreSource": null,
+    "phone": "+34 934 29 10 17",
+    "website": "http://bcn.restaurantgaig.com/",
+    "note": " Adreça i telèfon verificats: Carrer de la Nau Santa Maria, 5 (Les Corts), web oficial i Ajuntament de Barcelona."
   },
   {
     "id": "t9xc19-jiribilla",

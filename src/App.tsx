@@ -9,7 +9,8 @@ import type { ScoresByRestaurant, UserScore } from './lib/scoring';
 import { loadFavorites, toggleFavorite, filterFavorites } from './lib/favorites';
 import { filterByWinner, filterByBadge, filterBySeason, sortByScore } from './lib/filters';
 import { BTN_GHOST, BTN_ICON, BTN_MAP, BTN_PRIMARY, BTN_SECONDARY, BTN_ACTIVE, BTN_BASE } from './lib/buttonStyles';
-import { bookingUrl, bookingLabel, callUrl } from './lib/booking';
+import { bookingUrl, bookingLabel, contactAction } from './lib/booking';
+import { restaurantLink, restaurantIdFromSearch } from './lib/deepLink';
 import RadarBanner from './components/RadarBanner';
 
 // Heavy panels are loaded on demand so the initial bundle only carries the list and radar views.
@@ -77,12 +78,17 @@ const ICONS = {
 
 export default function App() {
   const [comarca, setComarca] = useState('');
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(() => {
+    const id = restaurantIdFromSearch(window.location.search);
+    const hit = id ? restaurants.find((r) => r.id === id) : undefined;
+    return hit ? hit.name : '';
+  });
   const [geo, setGeo] = useState<Geo>({ status: 'idle' });
   const [radarOn, setRadarOn] = useState(false);
   const [radiusKm, setRadiusKm] = useState(DEFAULT_RADIUS_KM);
   const [routeIds, setRouteIds] = useState<string[]>([]);
   const [scoring, setScoring] = useState<Restaurant | null>(null);
+  const [notice, setNotice] = useState('');
   const [scores, setScores] = useState<ScoresByRestaurant>(readStoredScores);
   const [favorites, setFavorites] = useState<string[]>(() => loadFavorites(getStorage()));
   const [onlyFavorites, setOnlyFavorites] = useState(false);
@@ -131,6 +137,24 @@ export default function App() {
   };
 
   const userPoint = geo.status === 'ok' && geo.lat !== undefined && geo.lng !== undefined ? { lat: geo.lat, lng: geo.lng } : null;
+
+  /** Web Share when the browser supports it, otherwise copy the link. Returns the message shown to the user. */
+  async function shareRestaurant(r: Restaurant): Promise<string> {
+    const url = restaurantLink(`${window.location.origin}${window.location.pathname}`, r.id);
+    const text = `${r.name} (${r.city}) · Joc de Cartes`;
+    try {
+      if (typeof navigator.share === 'function') {
+        await navigator.share({ title: r.name, text, url });
+        return 'Compartit';
+      }
+      await navigator.clipboard.writeText(url);
+      return 'Enllaç copiat';
+    } catch (err) {
+      // User cancelled the share sheet: not an error.
+      if (err instanceof DOMException && err.name === 'AbortError') return '';
+      return 'No s\'ha pogut compartir';
+    }
+  }
 
   const list = useMemo(() => {
     const byText = query.trim() === '' ? restaurants : searchRestaurants(restaurants, query).map((h) => h.restaurant);
@@ -185,6 +209,7 @@ export default function App() {
         </div>
       </header>
 
+      <div role="status" aria-live="polite" className="mx-auto max-w-5xl px-4 text-sm text-stone-600">{notice}</div>
       <main className="mx-auto max-w-5xl px-4 pt-6 sm:px-6">
         <section className="mb-6 rounded-2xl border border-stone-200 bg-white p-3 shadow-sm sm:p-4">
           <label className="relative block">
@@ -448,6 +473,14 @@ export default function App() {
                       </button>
                       <button
                         type="button"
+                        onClick={() => void shareRestaurant(r).then((m) => { if (m) setNotice(m); })}
+                        className={BTN_GHOST}
+                        aria-label={`Compartir ${r.name}`}
+                      >
+                        Compartir
+                      </button>
+                      <button
+                        type="button"
                         onClick={() => toggleRoute(r.id)}
                         aria-pressed={inRoute}
                         className={inRoute ? BTN_ACTIVE : BTN_GHOST}
@@ -477,9 +510,15 @@ export default function App() {
                       >
                         {bookingLabel(r)}
                       </a>
-                      {callUrl(r) && (
-                        <a href={callUrl(r) ?? undefined} className={BTN_GHOST} aria-label={`Trucar a ${r.name}`}>
-                          Trucar
+                      {contactAction(r) && (
+                        <a
+                          href={contactAction(r)?.href}
+                          target={contactAction(r)?.kind === 'maps' ? '_blank' : undefined}
+                          rel={contactAction(r)?.kind === 'maps' ? 'noreferrer' : undefined}
+                          className={BTN_GHOST}
+                          aria-label={`${contactAction(r)?.label} · ${r.name}`}
+                        >
+                          {contactAction(r)?.label}
                         </a>
                       )}
                     </div>

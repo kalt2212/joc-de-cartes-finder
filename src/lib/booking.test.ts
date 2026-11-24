@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { bookingUrl, bookingLabel, callUrl } from './booking';
+import { bookingUrl, bookingLabel, callUrl, contactAction } from './booking';
 import type { Restaurant } from '../types';
 
 const base: Restaurant = {
@@ -43,5 +43,26 @@ describe('callUrl', () => {
   });
   it('returns null for a permanently closed venue even with a phone', () => {
     expect(callUrl({ ...base, phone: '+34 936 25 82 00', permanentlyClosed: true })).toBeNull();
+  });
+});
+
+describe('contactAction', () => {
+  it('calls the phone when one is known', () => {
+    expect(contactAction({ ...base, phone: '+34 936 25 82 00' })).toEqual({
+      kind: 'call',
+      label: 'Trucar',
+      href: 'tel:+34936258200',
+    });
+  });
+  it('falls back to a Google Maps search when the phone is missing', () => {
+    const a = contactAction(base);
+    if (a === null) throw new Error('expected a contact action');
+    expect(a.kind).toBe('maps');
+    expect(a.label).toBe('Buscar telèfon');
+    expect(a.href).toContain('https://www.google.com/maps/search/');
+    expect(a.href).toContain(encodeURIComponent('Casa Ràfols Barcelona'));
+  });
+  it('hides the action for permanently closed venues', () => {
+    expect(contactAction({ ...base, permanentlyClosed: true })).toBeNull();
   });
 });
