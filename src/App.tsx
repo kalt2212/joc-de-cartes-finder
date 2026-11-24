@@ -12,6 +12,9 @@ import { BTN_GHOST, BTN_ICON, BTN_MAP, BTN_PRIMARY, BTN_SECONDARY, BTN_ACTIVE, B
 import { bookingUrl, bookingLabel, contactAction } from './lib/booking';
 import { restaurantLink, restaurantIdFromSearch } from './lib/deepLink';
 import { GASTRO_ROUTES, routeRestaurants } from './lib/gastroRoutes';
+import { supportUrl, isSponsored, sponsoredFirst } from './lib/support';
+
+const SUPPORT_HREF = supportUrl(import.meta.env.VITE_SUPPORT_URL as string | undefined);
 import RadarBanner from './components/RadarBanner';
 
 // Heavy panels are loaded on demand so the initial bundle only carries the list and radar views.
@@ -163,7 +166,7 @@ export default function App() {
     const curated = GASTRO_ROUTES.find((rt) => rt.id === curatedRouteId);
     const inRoute = curated ? routeRestaurants(curated, byText) : byText;
     const filtered = filterBySeason(filterByComarca(inRoute, comarca), season);
-    const shown = filterByBadge(filterByWinner(onlyFavorites ? filterFavorites(filtered, favorites) : filtered, onlyWinners), onlyBadged);
+    const shown = sponsoredFirst(filterByBadge(filterByWinner(onlyFavorites ? filterFavorites(filtered, favorites) : filtered, onlyWinners), onlyBadged));
     if (userPoint !== null) {
       return sortByDistance(shown, userPoint);
     }
@@ -427,6 +430,11 @@ export default function App() {
                         <Icon d={ICONS.trophy} className="h-3 w-3" /> Guanyador
                       </span>
                     )}
+                    {isSponsored(r) && (
+                      <span className="inline-flex items-center rounded-full border border-stone-200 px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide text-stone-500">
+                        Destacat
+                      </span>
+                    )}
                     {r.badge && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-violet-100 px-2 py-0.5 text-xs font-semibold text-violet-800">
                         <Icon d={ICONS.star} className="h-3 w-3" /> {r.badge}
@@ -546,6 +554,18 @@ export default function App() {
           </ul>
         )}
       </main>
+      {SUPPORT_HREF && (
+        <footer className="mx-auto mt-10 max-w-6xl px-4 pb-8 text-center text-xs text-stone-400">
+          <a
+            href={SUPPORT_HREF}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-stone-600 hover:underline"
+          >
+            Convidar a un cafè
+          </a>
+        </footer>
+      )}
 
       {scoring !== null && (
         <Suspense fallback={null}>

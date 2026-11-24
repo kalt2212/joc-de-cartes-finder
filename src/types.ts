@@ -37,4 +37,6 @@ export interface Restaurant {
   googleMapsUrl: string;
   /** Confirmed direct TheFork booking page for this venue. Absent until verified. */
   bookingUrl?: string;
+  /** Paid placement. Shown with a discreet Destacat badge and listed first. */
+  sponsored?: boolean;
 }
