@@ -148,7 +148,8 @@
     "marcScoreSource": null,
     "marcScoreVerified": false,
     "episodeFinalScore": null,
-    "episodeScoreSource": null
+    "episodeScoreSource": null,
+    "phone": "+34 621 03 30 49"
   },
   {
     "id": "t10xc2-sucamar",
@@ -170,7 +171,8 @@
     "marcScoreVerified": false,
     "episodeFinalScore": null,
     "episodeScoreSource": null,
-    "note": "Coordenades de Google Maps (ROOFTOP), Plaça Pati de Vela, 2, Local, Badalona. Comparteix local amb Marbrava."
+    "note": "Coordenades de Google Maps (ROOFTOP), Plaça Pati de Vela, 2, Local, Badalona. Comparteix local amb Marbrava.",
+    "phone": "+34 930 13 16 31"
   },
   {
     "id": "lleida-2026-03-26-amoca",
@@ -237,7 +239,8 @@
     "marcScoreSource": null,
     "marcScoreVerified": false,
     "episodeFinalScore": 6.9,
-    "episodeScoreSource": "https://www.3cat.cat/3catinfo/tensio-fins-a-lultim-segon-marc-ribas-corona-el-guanyador-del-joc-de-cartes-mes-renyit-de-la-temporada/noticia/3401807/"
+    "episodeScoreSource": "https://www.3cat.cat/3catinfo/tensio-fins-a-lultim-segon-marc-ribas-corona-el-guanyador-del-joc-de-cartes-mes-renyit-de-la-temporada/noticia/3401807/",
+    "phone": "+34 973 43 80 56"
   },
   {
     "id": "ciri-taverna-del-ciri",
@@ -305,7 +308,8 @@
     "marcScoreSource": null,
     "marcScoreVerified": false,
     "episodeFinalScore": null,
-    "episodeScoreSource": null
+    "episodeScoreSource": null,
+    "phone": "+34 938 56 31 80"
   },
   {
     "id": "t9xc19-nobu",
@@ -752,7 +756,8 @@
     "marcScoreSource": null,
     "marcScoreVerified": false,
     "episodeFinalScore": null,
-    "episodeScoreSource": null
+    "episodeScoreSource": null,
+    "phone": "+34 977 34 07 07"
   },
   {
     "id": "b2-sora",
@@ -1299,7 +1304,8 @@
     "marcScoreSource": null,
     "marcScoreVerified": false,
     "episodeFinalScore": null,
-    "episodeScoreSource": null
+    "episodeScoreSource": null,
+    "phone": "+34 661 28 27 33"
   },
   {
     "id": "t8xc9-el-vilagut",
