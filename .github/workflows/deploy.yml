@@ -28,6 +28,7 @@ jobs:
       - run: npm run build
         env:
           VITE_SUPPORT_URL: https://ko-fi.com/adrianmartinezgarcia
+          VITE_AFFILIATE_ID: ${{ secrets.THEFORK_AFFILIATE_ID }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

@@ -11,7 +11,7 @@ const base: Restaurant = {
 
 describe('bookingUrl', () => {
   it('builds a TheFork search URL with the encoded name by default', () => {
-    expect(bookingUrl(base)).toBe('https://www.thefork.cat/search?q=Casa%20R%C3%A0fols');
+    expect(bookingUrl(base)).toBe('https://www.thefork.cat/search?q=Casa%20R%C3%A0fols%20Barcelona');
   });
   it('falls back to Google Maps search when the restaurant is permanently closed', () => {
     const url = bookingUrl({ ...base, permanentlyClosed: true });
@@ -21,13 +21,13 @@ describe('bookingUrl', () => {
     expect(bookingUrl({ ...base, permanentlyClosed: true, googleMapsUrl: 'https://maps.example/x' })).toBe('https://maps.example/x');
   });
   it('encodes special characters in the name', () => {
-    expect(bookingUrl({ ...base, name: "L'Italianini & Co" })).toBe("https://www.thefork.cat/search?q=L'Italianini%20%26%20Co");
+    expect(bookingUrl({ ...base, name: "L'Italianini & Co" })).toBe("https://www.thefork.cat/search?q=L'Italianini%20%26%20Co%20Barcelona");
   });
 });
 
 describe('bookingLabel', () => {
   it('uses Reservar for open venues', () => {
-    expect(bookingLabel(base)).toBe('Reservar taula');
+    expect(bookingLabel(base)).toBe('Buscar a TheFork');
   });
   it('uses Veure al mapa for permanently closed venues', () => {
     expect(bookingLabel({ ...base, permanentlyClosed: true })).toBe('Veure al mapa');
@@ -72,13 +72,13 @@ describe('affiliate booking', () => {
     episodeTitle: '', winner: false, platEstrella: null, rating: null, verified: true } as Restaurant;
 
   it('uses the plain TheFork search when no affiliate id is configured', () => {
-    expect(bookingUrl(base, undefined)).toBe('https://www.thefork.cat/search?q=Casa%20Rafols');
+    expect(bookingUrl(base, undefined)).toBe('https://www.thefork.cat/search?q=Casa%20Rafols%20Barcelona');
   });
 
   it('appends the affiliate parameter when an affiliate id is configured', () => {
     const u = new URL(bookingUrl(base, 'ABC123'));
     expect(u.origin + u.pathname).toBe('https://www.thefork.cat/search');
-    expect(u.searchParams.get('q')).toBe('Casa Rafols');
+    expect(u.searchParams.get('q')).toBe('Casa Rafols Barcelona');
     expect(u.searchParams.get('affiliate')).toBe('ABC123');
   });
 
@@ -94,10 +94,39 @@ describe('affiliate booking', () => {
 
   it('labels a confirmed direct link as a direct booking', () => {
     const r = { ...base, bookingUrl: 'https://www.thefork.cat/restaurant/x-r1' } as Restaurant;
-    expect(bookingLabel(r)).toBe('Reservar directament');
+    expect(bookingLabel(r)).toBe('Reservar a TheFork');
   });
 
   it('keeps the generic label for the search fallback', () => {
-    expect(bookingLabel(base)).toBe('Reservar taula');
+    expect(bookingLabel(base)).toBe('Buscar a TheFork');
+  });
+});
+
+describe('search fallback with town', () => {
+  const r = { id: 'x', name: 'Casa Rafols', comarca: 'Barcelonès', city: 'Barcelona', lat: 41.4, lng: 2.1, season: null,
+    episodeTitle: '', winner: false, platEstrella: null, rating: null, verified: true,
+    googleMapsUrl: 'https://maps.google.com/?q=x', marcScore: null } as Restaurant;
+
+  it('includes the town in the TheFork search query', () => {
+    const u = new URL(bookingUrl(r, undefined));
+    expect(u.searchParams.get('q')).toBe('Casa Rafols Barcelona');
+  });
+
+  it('labels the search fallback as Buscar a TheFork', () => {
+    expect(bookingLabel(r)).toBe('Buscar a TheFork');
+  });
+
+  it('labels a confirmed direct link as Reservar a TheFork', () => {
+    const d = { ...r, bookingUrl: 'https://www.thefork.cat/restaurant/x-r1' } as Restaurant;
+    expect(bookingLabel(d)).toBe('Reservar a TheFork');
+  });
+});
+
+describe('affiliate id is never leaked when unset', () => {
+  it('omits the affiliate param for an empty id', () => {
+    const r = { id: 'x', name: 'Casa', comarca: 'Barcelonès', city: 'Barcelona', lat: 41.4, lng: 2.1, season: null,
+      episodeTitle: '', winner: false, platEstrella: null, rating: null, verified: true,
+      googleMapsUrl: 'https://maps.google.com/?q=x', marcScore: null } as Restaurant;
+    expect(bookingUrl(r, '')).not.toContain('affiliate');
   });
 });

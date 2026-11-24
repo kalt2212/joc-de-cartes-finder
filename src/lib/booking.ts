@@ -19,13 +19,13 @@ export function withAffiliate(url: string, affiliateId: string | undefined): str
 export function bookingUrl(r: Restaurant, affiliateId: string | undefined = AFFILIATE_ID): string {
   if (r.permanentlyClosed) return r.googleMapsUrl;
   if (r.bookingUrl) return withAffiliate(r.bookingUrl, affiliateId);
-  return withAffiliate(`https://www.thefork.cat/search?q=${encodeURIComponent(r.name)}`, affiliateId);
+  return withAffiliate(`https://www.thefork.cat/search?q=${encodeURIComponent(`${r.name} ${r.city}`)}`, affiliateId);
 }
 
 /** Button label that matches what the link does. */
 export function bookingLabel(r: Restaurant): string {
   if (r.permanentlyClosed) return 'Veure al mapa';
-  return r.bookingUrl ? 'Reservar directament' : 'Reservar taula';
+  return r.bookingUrl ? 'Reservar a TheFork' : 'Buscar a TheFork';
 }
 
 /** Phone link (tel:) for the call button. Null when no phone is known or the venue is closed. */
