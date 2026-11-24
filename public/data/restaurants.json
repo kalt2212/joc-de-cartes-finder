@@ -523,12 +523,13 @@
     "verified": true,
     "sourceUrl": "https://www.radioseu.cat/noticies/joc-de-cartes-estiu-estrena-la-temporada-amb-tres-restaurants-de-lalt-urgell",
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=La%20Taverna%20del%20Codina%20La%20Seu%20d%27Urgell",
-    "note": "Guanyador segons RàdioSeu (30/07/2026). Puntuació final 6,9.",
-    "marcScore": null,
-    "marcScoreSource": null,
-    "marcScoreVerified": false,
-    "episodeFinalScore": null,
-    "episodeScoreSource": null
+    "note": "Guanyador segons RàdioSeu (30/07/2026). Puntuació final 6,9. Marc Ribas: 8,8. Plat estrella per votació del programa.",
+    "marcScore": 8.8,
+    "marcScoreSource": "https://www.radioseu.cat/noticies/joc-de-cartes-estiu-estrena-la-temporada-amb-tres-restaurants-de-lalt-urgell",
+    "marcScoreVerified": true,
+    "episodeFinalScore": 6.9,
+    "episodeScoreSource": "https://www.radioseu.cat/noticies/joc-de-cartes-estiu-estrena-la-temporada-amb-tres-restaurants-de-lalt-urgell",
+    "platEstrella": "Peus de porc, cuinats per la Cristina (xef)"
   },
   {
     "id": "b2-miseria",
@@ -544,12 +545,12 @@
     "verified": true,
     "sourceUrl": "https://www.radioseu.cat/noticies/joc-de-cartes-estiu-estrena-la-temporada-amb-tres-restaurants-de-lalt-urgell",
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Miseria%20e%20Nobilt%C3%A0%20Oliana",
-    "note": "Competidor segons RàdioSeu (30/07/2026). Puntuació final 6,1.",
-    "marcScore": null,
-    "marcScoreSource": null,
-    "marcScoreVerified": false,
-    "episodeFinalScore": null,
-    "episodeScoreSource": null
+    "note": "Competidor segons RàdioSeu (30/07/2026). Puntuació final 6,1. Marc Ribas: 7,0.",
+    "marcScore": 7.0,
+    "marcScoreSource": "https://www.radioseu.cat/noticies/joc-de-cartes-estiu-estrena-la-temporada-amb-tres-restaurants-de-lalt-urgell",
+    "marcScoreVerified": true,
+    "episodeFinalScore": 6.1,
+    "episodeScoreSource": "https://www.radioseu.cat/noticies/joc-de-cartes-estiu-estrena-la-temporada-amb-tres-restaurants-de-lalt-urgell"
   },
   {
     "id": "b2-casino-peramola",
@@ -565,12 +566,12 @@
     "verified": true,
     "sourceUrl": "https://www.radioseu.cat/noticies/joc-de-cartes-estiu-estrena-la-temporada-amb-tres-restaurants-de-lalt-urgell",
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Casino%20de%20Peramola%20Peramola",
-    "note": "Competidor segons RàdioSeu (30/07/2026). Puntuació final 5,6.",
-    "marcScore": null,
-    "marcScoreSource": null,
-    "marcScoreVerified": false,
-    "episodeFinalScore": null,
-    "episodeScoreSource": null
+    "note": "Competidor segons RàdioSeu (30/07/2026). Puntuació final 5,6. Marc Ribas: 6,6.",
+    "marcScore": 6.6,
+    "marcScoreSource": "https://www.radioseu.cat/noticies/joc-de-cartes-estiu-estrena-la-temporada-amb-tres-restaurants-de-lalt-urgell",
+    "marcScoreVerified": true,
+    "episodeFinalScore": 5.6,
+    "episodeScoreSource": "https://www.radioseu.cat/noticies/joc-de-cartes-estiu-estrena-la-temporada-amb-tres-restaurants-de-lalt-urgell"
   },
   {
     "id": "b2-hivernacle-olot",
