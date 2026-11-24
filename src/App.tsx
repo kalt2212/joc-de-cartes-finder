@@ -11,6 +11,7 @@ import { filterByWinner, filterByBadge, filterBySeason, sortByScore } from './li
 import { BTN_GHOST, BTN_ICON, BTN_MAP, BTN_PRIMARY, BTN_SECONDARY, BTN_ACTIVE, BTN_BASE } from './lib/buttonStyles';
 import { bookingUrl, bookingLabel, contactAction } from './lib/booking';
 import { restaurantLink, restaurantIdFromSearch } from './lib/deepLink';
+import { GASTRO_ROUTES, routeRestaurants } from './lib/gastroRoutes';
 import RadarBanner from './components/RadarBanner';
 
 // Heavy panels are loaded on demand so the initial bundle only carries the list and radar views.
@@ -87,6 +88,7 @@ export default function App() {
   const [radarOn, setRadarOn] = useState(false);
   const [radiusKm, setRadiusKm] = useState(DEFAULT_RADIUS_KM);
   const [routeIds, setRouteIds] = useState<string[]>([]);
+  const [curatedRouteId, setCuratedRouteId] = useState('');
   const [scoring, setScoring] = useState<Restaurant | null>(null);
   const [notice, setNotice] = useState('');
   const [scores, setScores] = useState<ScoresByRestaurant>(readStoredScores);
@@ -158,14 +160,16 @@ export default function App() {
 
   const list = useMemo(() => {
     const byText = query.trim() === '' ? restaurants : searchRestaurants(restaurants, query).map((h) => h.restaurant);
-    const filtered = filterBySeason(filterByComarca(byText, comarca), season);
+    const curated = GASTRO_ROUTES.find((rt) => rt.id === curatedRouteId);
+    const inRoute = curated ? routeRestaurants(curated, byText) : byText;
+    const filtered = filterBySeason(filterByComarca(inRoute, comarca), season);
     const shown = filterByBadge(filterByWinner(onlyFavorites ? filterFavorites(filtered, favorites) : filtered, onlyWinners), onlyBadged);
     if (userPoint !== null) {
       return sortByDistance(shown, userPoint);
     }
     return sortByScoreOn ? sortByScore(shown) : shown;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [comarca, query, geo, onlyFavorites, favorites, onlyWinners, onlyBadged, season, sortByScoreOn]);
+  }, [comarca, query, geo, onlyFavorites, favorites, onlyWinners, onlyBadged, season, sortByScoreOn, curatedRouteId]);
 
   const radarHits = useMemo(
     () => (radarOn && userPoint !== null ? findNearbyTargets(restaurants, userPoint, radiusKm) : []),
@@ -298,6 +302,19 @@ export default function App() {
               <Icon d={ICONS.star} className="h-3.5 w-3.5" />
               Restaurant de Marc Ribas
             </button>
+            <label className="flex items-center gap-2 text-sm text-stone-600">
+              <span>Ruta</span>
+              <select
+                value={curatedRouteId}
+                onChange={(e) => setCuratedRouteId(e.target.value)}
+                className="rounded-full border border-stone-300 bg-white px-3 py-1.5 text-sm text-stone-700"
+              >
+                <option value="">Totes</option>
+                {GASTRO_ROUTES.map((rt) => (
+                  <option key={rt.id} value={rt.id}>{rt.title}</option>
+                ))}
+              </select>
+            </label>
             <button
               type="button"
               onClick={() => setSortByScoreOn((on) => !on)}
