@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { bookingUrl, bookingLabel } from './booking';
+import { bookingUrl, bookingLabel, callUrl } from './booking';
 import type { Restaurant } from '../types';
 
 const base: Restaurant = {
@@ -31,5 +31,17 @@ describe('bookingLabel', () => {
   });
   it('uses Veure al mapa for permanently closed venues', () => {
     expect(bookingLabel({ ...base, permanentlyClosed: true })).toBe('Veure al mapa');
+  });
+});
+
+describe('callUrl', () => {
+  it('returns a tel: link with the phone digits, spaces stripped', () => {
+    expect(callUrl({ ...base, phone: '+34 936 25 82 00' })).toBe('tel:+34936258200');
+  });
+  it('returns null when there is no phone', () => {
+    expect(callUrl(base)).toBeNull();
+  });
+  it('returns null for a permanently closed venue even with a phone', () => {
+    expect(callUrl({ ...base, phone: '+34 936 25 82 00', permanentlyClosed: true })).toBeNull();
   });
 });

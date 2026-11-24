@@ -29,6 +29,10 @@ export interface Restaurant {
   episodeFinalScore?: number | null;
   /** URL of the article that verifies episodeFinalScore */
   episodeScoreSource?: string | null;
+  /** Public phone number from the venue's Google Maps listing, e.g. +34 936 25 82 00 */
+  phone?: string;
+  /** Official website of the venue, when known */
+  website?: string;
   sourceUrl?: string;
   googleMapsUrl: string;
 }

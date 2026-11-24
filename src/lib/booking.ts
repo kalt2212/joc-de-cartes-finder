@@ -10,3 +10,9 @@ export function bookingUrl(r: Restaurant): string {
 export function bookingLabel(r: Restaurant): string {
   return r.permanentlyClosed ? 'Veure al mapa' : 'Reservar taula';
 }
+
+/** Phone link (tel:) for the call button. Null when no phone is known or the venue is closed. */
+export function callUrl(r: Restaurant): string | null {
+  if (r.permanentlyClosed || !r.phone) return null;
+  return `tel:${r.phone.replace(/[^+\d]/g, '')}`;
+}

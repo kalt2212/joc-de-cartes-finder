@@ -846,7 +846,9 @@
     "marcScoreSource": null,
     "marcScoreVerified": false,
     "episodeFinalScore": null,
-    "episodeScoreSource": null
+    "episodeScoreSource": null,
+    "phone": "+34 659 79 66 67",
+    "website": "https://www.latasketadelmar.com/"
   },
   {
     "id": "b2-italianini",
@@ -867,7 +869,8 @@
     "marcScoreSource": null,
     "marcScoreVerified": false,
     "episodeFinalScore": null,
-    "episodeScoreSource": null
+    "episodeScoreSource": null,
+    "phone": "+34 633 01 91 16"
   },
   {
     "id": "b2-ambient",
@@ -952,7 +955,9 @@
     "marcScoreSource": null,
     "marcScoreVerified": false,
     "episodeFinalScore": null,
-    "episodeScoreSource": null
+    "episodeScoreSource": null,
+    "phone": "+34 930 34 32 25",
+    "website": "https://www.grantonino.com/"
   },
   {
     "id": "t9xc2-barraca",
@@ -1304,7 +1309,9 @@
     "marcScoreSource": null,
     "marcScoreVerified": false,
     "episodeFinalScore": null,
-    "episodeScoreSource": null
+    "episodeScoreSource": null,
+    "phone": "+34 646 40 52 47",
+    "website": "http://www.vilagutrestaurant.com/"
   },
   {
     "id": "t8xc11-can-tintorer",
@@ -1722,7 +1729,9 @@
     "marcScoreSource": null,
     "marcScoreVerified": false,
     "episodeFinalScore": null,
-    "episodeScoreSource": null
+    "episodeScoreSource": null,
+    "phone": "+34 936 25 82 00",
+    "website": "https://www.casarafols.com/"
   },
   {
     "id": "tiare",
@@ -1854,7 +1863,9 @@
     "marcScoreSource": null,
     "marcScoreVerified": false,
     "episodeFinalScore": null,
-    "episodeScoreSource": null
+    "episodeScoreSource": null,
+    "phone": "+34 932 69 59 60",
+    "website": "http://www.littleandaman.es/"
   },
   {
     "id": "can-marles",

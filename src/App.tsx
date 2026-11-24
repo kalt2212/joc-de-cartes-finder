@@ -9,7 +9,7 @@ import type { ScoresByRestaurant, UserScore } from './lib/scoring';
 import { loadFavorites, toggleFavorite, filterFavorites } from './lib/favorites';
 import { filterByWinner, filterByBadge, filterBySeason, sortByScore } from './lib/filters';
 import { BTN_GHOST, BTN_ICON, BTN_MAP, BTN_PRIMARY, BTN_SECONDARY, BTN_ACTIVE, BTN_BASE } from './lib/buttonStyles';
-import { bookingUrl, bookingLabel } from './lib/booking';
+import { bookingUrl, bookingLabel, callUrl } from './lib/booking';
 import RadarBanner from './components/RadarBanner';
 
 // Heavy panels are loaded on demand so the initial bundle only carries the list and radar views.
@@ -477,6 +477,11 @@ export default function App() {
                       >
                         {bookingLabel(r)}
                       </a>
+                      {callUrl(r) && (
+                        <a href={callUrl(r) ?? undefined} className={BTN_GHOST} aria-label={`Trucar a ${r.name}`}>
+                          Trucar
+                        </a>
+                      )}
                     </div>
                   </div>
                 </li>

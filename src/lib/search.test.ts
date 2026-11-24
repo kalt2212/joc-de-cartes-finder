@@ -65,3 +65,18 @@ describe('searchRestaurants', () => {
     expect(hits[0].restaurant.id).toBe('gaig');
   });
 });
+
+describe('searchRestaurants field coverage', () => {
+  it('matches a town name on its own', () => {
+    expect(searchRestaurants(items, 'castellgali').map((h) => h.restaurant.id)).toEqual(['tikus']);
+  });
+  it('matches a comarca name on its own', () => {
+    expect(searchRestaurants(items, 'bages').map((h) => h.restaurant.id)).toEqual(['tikus']);
+  });
+  it('matches the Marc Ribas dish by one word', () => {
+    expect(searchRestaurants(items, 'ximiurri').map((h) => h.restaurant.id)).toEqual(['tikus']);
+  });
+  it('returns nothing when no field matches', () => {
+    expect(searchRestaurants(items, 'sushi')).toEqual([]);
+  });
+});
