@@ -59,8 +59,9 @@
     "marcScore": null,
     "marcScoreSource": null,
     "marcScoreVerified": false,
-    "episodeFinalScore": null,
-    "episodeScoreSource": null
+    "episodeFinalScore": 4.9,
+    "episodeScoreSource": "https://statics.3cat.cat/multimedia/vtt/9/1/1790866820619.vtt",
+    "note": "Última classificació (transcripció oficial 3Cat, T10xC4). Nota final 4,9."
   },
   {
     "id": "t10xc3-tikus",
