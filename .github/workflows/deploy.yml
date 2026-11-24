@@ -26,6 +26,8 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
+        env:
+          VITE_SUPPORT_URL: https://ko-fi.com/kalt2212
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
