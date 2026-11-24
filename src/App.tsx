@@ -9,6 +9,7 @@ import type { ScoresByRestaurant, UserScore } from './lib/scoring';
 import { loadFavorites, toggleFavorite, filterFavorites } from './lib/favorites';
 import { filterByWinner, filterByBadge, filterBySeason, sortByScore } from './lib/filters';
 import { BTN_GHOST, BTN_ICON, BTN_MAP, BTN_PRIMARY, BTN_SECONDARY, BTN_ACTIVE, BTN_BASE } from './lib/buttonStyles';
+import { bookingUrl, bookingLabel } from './lib/booking';
 import RadarBanner from './components/RadarBanner';
 
 // Heavy panels are loaded on demand so the initial bundle only carries the list and radar views.
@@ -467,6 +468,14 @@ export default function App() {
                         <Icon d={ICONS.map} className="h-3.5 w-3.5" />
                         Mapa
                         <Icon d={ICONS.external} className="h-3 w-3" />
+                      </a>
+                      <a
+                        href={bookingUrl(r)}
+                        target="_blank"
+                        rel="noreferrer"
+                        className={BTN_PRIMARY}
+                      >
+                        {bookingLabel(r)}
                       </a>
                     </div>
                   </div>
