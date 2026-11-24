@@ -324,7 +324,8 @@
     "marcScoreSource": null,
     "marcScoreVerified": false,
     "episodeFinalScore": null,
-    "episodeScoreSource": null
+    "episodeScoreSource": null,
+    "phone": "+34 931 70 47 39"
   },
   {
     "id": "t1-la-premsa",
@@ -492,7 +493,9 @@
     "marcScoreSource": null,
     "marcScoreVerified": false,
     "episodeFinalScore": null,
-    "episodeScoreSource": null
+    "episodeScoreSource": null,
+    "phone": "+34 937 77 61 53",
+    "website": "https://restaurantflordesal.com/restaurant-flor-de-sal-esparreguera/"
   },
   {
     "id": "bages-2019-joviat",
@@ -619,7 +622,9 @@
     "marcScoreSource": null,
     "marcScoreVerified": false,
     "episodeFinalScore": null,
-    "episodeScoreSource": null
+    "episodeScoreSource": null,
+    "phone": "+34 972 26 10 04",
+    "website": "https://www.ladeu.es/es/"
   },
   {
     "id": "b2-les-pedretes",
@@ -807,7 +812,8 @@
     "marcScoreSource": null,
     "marcScoreVerified": false,
     "episodeFinalScore": null,
-    "episodeScoreSource": null
+    "episodeScoreSource": null,
+    "phone": "+34 977 24 00 74"
   },
   {
     "id": "b2-pura-brasa",
@@ -1307,13 +1313,13 @@
     "verified": true,
     "sourceUrl": "https://www.3cat.cat/3cat/t8xc9-el-millor-restaurant-amb-gall-del-penedes/video/6312124/",
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Restaurant%20Vilagut%20Vilafranca%20del%20Penedès",
-    "note": "Guanyador segons transcripció oficial 3Cat (T8xC9).",
+    "note": "Guanyador segons transcripció oficial 3Cat (T8xC9). Telèfon de Google Maps alternatiu: +34 646 40 52 47.",
     "marcScore": null,
     "marcScoreSource": null,
     "marcScoreVerified": false,
     "episodeFinalScore": null,
     "episodeScoreSource": null,
-    "phone": "+34 646 40 52 47",
+    "phone": "+34 931 30 70 96",
     "website": "http://www.vilagutrestaurant.com/"
   },
   {
@@ -1380,7 +1386,9 @@
     "marcScoreSource": null,
     "marcScoreVerified": false,
     "episodeFinalScore": null,
-    "episodeScoreSource": null
+    "episodeScoreSource": null,
+    "phone": "+34 935 28 60 02",
+    "website": "https://2254restaurant.com/"
   },
   {
     "id": "t8xc15-pirenasian-bar",
@@ -1424,7 +1432,9 @@
     "marcScoreSource": null,
     "marcScoreVerified": false,
     "episodeFinalScore": null,
-    "episodeScoreSource": null
+    "episodeScoreSource": null,
+    "phone": "+34 930 38 58 77",
+    "website": "https://santaco.es/"
   },
   {
     "id": "t8xc17-don-martin",
@@ -1512,7 +1522,9 @@
     "marcScoreSource": null,
     "marcScoreVerified": false,
     "episodeFinalScore": null,
-    "episodeScoreSource": null
+    "episodeScoreSource": null,
+    "phone": "+34 933 42 51 18",
+    "website": "https://www.restaurantglaciar.com"
   },
   {
     "id": "t7xc12-xavier-pellicer",
@@ -1644,7 +1656,9 @@
     "marcScoreSource": null,
     "marcScoreVerified": false,
     "episodeFinalScore": null,
-    "episodeScoreSource": null
+    "episodeScoreSource": null,
+    "phone": "+34 689 52 86 29",
+    "website": "https://thefactory.dtouch.es"
   },
   {
     "id": "la-cuina-d-en-tikus",
