@@ -428,6 +428,9 @@ export default function App() {
                   <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-4">
                     <span className={`text-sm font-semibold ${r.rating !== null ? 'text-stone-800' : 'text-stone-400'}`}>
                       {r.rating !== null ? `★ ${r.rating}/10` : 'Nota pendent'}
+                      {r.marcScoreVerified && r.marcScore !== null && r.marcScore !== undefined && (
+                        <span className="ml-2 font-medium text-violet-700">Marc Ribas: {r.marcScore}/10</span>
+                      )}
                     </span>
                     <div className="flex flex-wrap items-center gap-1">
                       <button

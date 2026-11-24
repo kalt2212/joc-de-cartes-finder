@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Restaurant } from '../types';
-import { toMapMarkers, markerPopupLines } from '../lib/mapModel';
+import { toMapMarkers, markerPopupLines, spreadStackedMarkers } from '../lib/mapModel';
 
 interface RestaurantMapProps {
   restaurants: Restaurant[];
@@ -42,16 +42,18 @@ export default function RestaurantMap({ restaurants }: RestaurantMapProps) {
     if (!layer || !map) return;
     layer.clearLayers();
     const byId = new Map(restaurants.map((r) => [r.id, r]));
-    const markers = toMapMarkers(restaurants);
+    const markers = spreadStackedMarkers(toMapMarkers(restaurants));
     for (const m of markers) {
       const r = byId.get(m.id);
       if (!r) continue;
+      const closed = r.permanentlyClosed === true;
       const marker = L.circleMarker([m.lat, m.lng], {
         radius: m.winner ? 9 : 6,
-        color: m.winner ? '#b45309' : '#44403c',
-        fillColor: m.winner ? '#f59e0b' : '#fafaf9',
+        color: closed ? '#78716c' : m.winner ? '#b45309' : '#44403c',
+        fillColor: closed ? '#d6d3d1' : m.winner ? '#f59e0b' : '#fafaf9',
         fillOpacity: 0.9,
         weight: 2,
+        dashArray: closed ? '3 3' : undefined,
       });
       const html = markerPopupLines(r)
         .map((line, i) => (i === 0 ? `<strong>${escapeHtml(line)}</strong>` : `<div>${escapeHtml(line)}</div>`))
