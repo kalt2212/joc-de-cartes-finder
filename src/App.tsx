@@ -7,6 +7,7 @@ import { findNearbyTargets, DEFAULT_RADIUS_KM } from './lib/radar';
 import { parseStoredScores, serializeScores } from './lib/scoring';
 import type { ScoresByRestaurant, UserScore } from './lib/scoring';
 import { loadFavorites, toggleFavorite, filterFavorites } from './lib/favorites';
+import { filterByWinner, filterByBadge } from './lib/filters';
 import { BTN_GHOST, BTN_ICON, BTN_MAP, BTN_PRIMARY, BTN_SECONDARY, BTN_ACTIVE, BTN_BASE } from './lib/buttonStyles';
 import RadarBanner from './components/RadarBanner';
 
@@ -82,6 +83,8 @@ export default function App() {
   const [scores, setScores] = useState<ScoresByRestaurant>(readStoredScores);
   const [favorites, setFavorites] = useState<string[]>(() => loadFavorites(getStorage()));
   const [onlyFavorites, setOnlyFavorites] = useState(false);
+  const [onlyWinners, setOnlyWinners] = useState(false);
+  const [onlyBadged, setOnlyBadged] = useState(false);
 
   useEffect(() => {
     try {
@@ -126,13 +129,13 @@ export default function App() {
   const list = useMemo(() => {
     const byText = query.trim() === '' ? restaurants : searchRestaurants(restaurants, query).map((h) => h.restaurant);
     const filtered = filterByComarca(byText, comarca);
-    const shown = onlyFavorites ? filterFavorites(filtered, favorites) : filtered;
+    const shown = filterByBadge(filterByWinner(onlyFavorites ? filterFavorites(filtered, favorites) : filtered, onlyWinners), onlyBadged);
     if (userPoint !== null) {
       return sortByDistance(shown, userPoint);
     }
     return shown;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [comarca, query, geo, onlyFavorites, favorites]);
+  }, [comarca, query, geo, onlyFavorites, favorites, onlyWinners, onlyBadged]);
 
   const radarHits = useMemo(
     () => (radarOn && userPoint !== null ? findNearbyTargets(restaurants, userPoint, radiusKm) : []),
@@ -229,6 +232,24 @@ export default function App() {
               <Icon d={ICONS.star} className="h-3.5 w-3.5" />
               Només preferits
             </button>
+            <button
+              type="button"
+              onClick={() => setOnlyWinners((on) => !on)}
+              aria-pressed={onlyWinners}
+              className={onlyWinners ? BTN_ACTIVE : BTN_GHOST}
+            >
+              <Icon d={ICONS.trophy} className="h-3.5 w-3.5" />
+              Només guanyadors
+            </button>
+            <button
+              type="button"
+              onClick={() => setOnlyBadged((on) => !on)}
+              aria-pressed={onlyBadged}
+              className={onlyBadged ? BTN_ACTIVE : BTN_GHOST}
+            >
+              <Icon d={ICONS.star} className="h-3.5 w-3.5" />
+              Restaurant de Marc Ribas
+            </button>
             {comarca && (
               <button
                 type="button"
@@ -284,6 +305,8 @@ export default function App() {
                 setComarca('');
                 setQuery('');
                 setOnlyFavorites(false);
+                setOnlyWinners(false);
+                setOnlyBadged(false);
               }}
               className={`${BTN_SECONDARY} mt-4`}
             >
