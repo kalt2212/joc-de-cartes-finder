@@ -1,8 +1,17 @@
 // Vanilla service worker: precaches the app shell, stale-while-revalidate for restaurants.json, cache-first for hashed assets.
-const VERSION = 'v1';
+const VERSION = 'v2';
 const SHELL_CACHE = `jdc-shell-${VERSION}`;
 const RUNTIME_CACHE = `jdc-runtime-${VERSION}`;
-const SHELL_PATHS = ['', 'index.html', 'manifest.json', 'icons/icon.svg'];
+const SHELL_PATHS = [
+  '',
+  'index.html',
+  'manifest.json',
+  'icons/icon.svg',
+  'icons/icon-192.png',
+  'icons/icon-512.png',
+  'icons/icon-maskable-512.png',
+  'data/restaurants.json',
+];
 
 function basePath() {
   return new URL(self.registration.scope).pathname;

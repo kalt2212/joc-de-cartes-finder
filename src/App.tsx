@@ -14,6 +14,7 @@ import RadarBanner from './components/RadarBanner';
 // Heavy panels are loaded on demand so the initial bundle only carries the list and radar views.
 const RoutePlannerPanel = lazy(() => import('./components/RoutePlannerPanel'));
 const ScoringModal = lazy(() => import('./components/ScoringModal'));
+const RestaurantMap = lazy(() => import('./components/RestaurantMap'));
 
 const restaurants = data as Restaurant[];
 const comarques = Array.from(new Set(restaurants.map((r) => r.comarca))).sort();
@@ -88,6 +89,7 @@ export default function App() {
   const [onlyBadged, setOnlyBadged] = useState(false);
   const [season, setSeason] = useState<number | null>(null);
   const [sortByScoreOn, setSortByScoreOn] = useState(false);
+  const [mapOn, setMapOn] = useState(false);
 
   useEffect(() => {
     try {
@@ -292,6 +294,26 @@ export default function App() {
             )}
           </div>
         </section>
+
+        <div className="mb-6 flex justify-end">
+          <button
+            type="button"
+            onClick={() => setMapOn((on) => !on)}
+            aria-pressed={mapOn}
+            className={mapOn ? BTN_ACTIVE : BTN_SECONDARY}
+          >
+            <Icon d={ICONS.map} className="h-3.5 w-3.5" />
+            {mapOn ? 'Amaga el mapa' : 'Mostra el mapa'}
+          </button>
+        </div>
+
+        {mapOn && (
+          <div className="mb-6">
+            <Suspense fallback={<div className="h-96 w-full rounded-2xl border border-stone-200 bg-white" />}>
+              <RestaurantMap restaurants={list} />
+            </Suspense>
+          </div>
+        )}
 
         <RadarBanner
           enabled={radarOn}
