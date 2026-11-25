@@ -17,7 +17,7 @@ export function withAffiliate(url: string, affiliateId: string | undefined): str
  * present; otherwise a TheFork search by name. The affiliate id, when set, is appended to either.
  */
 export function bookingUrl(r: Restaurant, affiliateId: string | undefined = AFFILIATE_ID): string {
-  if (r.permanentlyClosed) return r.googleMapsUrl;
+  if (r.permanentlyClosed) return r.googleMapsUrl || mapsUrl(r.name, r.city);
   if (r.bookingUrl) return withAffiliate(r.bookingUrl, affiliateId);
   return withAffiliate(`https://www.thefork.cat/search?q=${encodeURIComponent(`${r.name} ${r.city}`)}`, affiliateId);
 }
@@ -31,7 +31,9 @@ export function bookingLabel(r: Restaurant): string {
 /** Phone link (tel:) for the call button. Null when no phone is known or the venue is closed. */
 export function callUrl(r: Restaurant): string | null {
   if (r.permanentlyClosed || !r.phone) return null;
-  return `tel:${r.phone.replace(/[^+\d]/g, '')}`;
+  const digits = r.phone.replace(/[^+\d]/g, '');
+  // shortcut: a valid Spanish number has 9 digits (plus country code); anything shorter is treated as unknown.
+  return /\d{6,}/.test(digits) ? `tel:${digits}` : null;
 }
 
 export type ContactAction =
